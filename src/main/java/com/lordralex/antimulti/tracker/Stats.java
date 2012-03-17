@@ -4,10 +4,10 @@
  */
 package com.lordralex.antimulti.tracker;
 
-import java.io.IOException;
-import org.bukkit.Bukkit;
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.tracker.Metrics.Graph;
+import java.io.IOException;
+import org.bukkit.Bukkit;
 
 /**
  *

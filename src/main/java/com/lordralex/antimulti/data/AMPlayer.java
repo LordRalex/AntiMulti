@@ -18,11 +18,11 @@ import com.lordralex.antimulti.mySQL.SQL;
  */
 public class AMPlayer {
     
-    Player player;
+    public Player player;
     private String password;
-    int id;
-    boolean loggedIn;
-    Location loginSpot;
+    public int id;
+    public boolean loggedIn;
+    public Location loginSpot;
     
     public AMPlayer()
     {

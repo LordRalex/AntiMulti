@@ -4,15 +4,16 @@
  */
 package com.lordralex.antimulti.listeners;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.listeners.commands.Add;
+import com.lordralex.antimulti.listeners.commands.GetIPs;
+import com.lordralex.antimulti.listeners.commands.GetNames;
+import com.lordralex.antimulti.listeners.commands.HelpCommand;
+import com.lordralex.antimulti.loggers.AMLogger;
+import com.lordralex.antimulti.mySQL.SQLDataException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.listeners.commands.*;
-import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.SQLDataException;
 
 /**
  *
@@ -21,6 +22,15 @@ import com.lordralex.antimulti.mySQL.SQLDataException;
 public class CommandListener implements CommandExecutor{
     
     AntiMulti plugin;
+    public String[] cmds = {
+        "am",
+        "getIPs",
+        "getNames",
+        "getIP",
+        "add",
+        "whitelist",
+        "banall"
+    };
     
     public CommandListener(AntiMulti aPlugin)
     {

@@ -4,6 +4,7 @@
  */
 package com.lordralex.antimulti.listeners;
 
+import com.lordralex.antimulti.AntiMulti;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -17,6 +18,10 @@ import com.lordralex.antimulti.data.Searcher;
  * @author Joshua
  */
 public class BlockListener implements Listener{
+
+    public BlockListener(AntiMulti aThis) {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
     
     @EventHandler (priority=EventPriority.NORMAL)
     public void onBlockBreak(BlockBreakEvent event)
