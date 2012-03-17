@@ -1,0 +1,74 @@
+name: AntiMulti
+main: src.com.lordralex.antimulti.AntiMulti
+version: 2.0.0
+author: Lord_Ralex
+description: AntiMulti- Prevents IP sharing to put it bluntly
+categories: [ADMIN]
+commands:
+    am:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    login:
+        description: 'Log in to the server'
+        permission: antimulti.login
+        aliases: [amlogin,aml]
+    register:
+        description: 'Register your player'
+        permission: antimulti.register
+        aliases: [amregister,amr]
+permissions:
+    antimulti.*:
+        description: Gives all nodes for Anti-Multi
+        default: op
+        children:
+            antimulti.cmd.*: true
+            antimulti.mod: true
+            antimulti.whitelist: true
+            antimulti.notify: true
+            antimulti.forceRegister: true
+    antimulti.cmd.*:
+        description: Gives all commands for Anti-Multi
+        default: op
+        children:
+            antimulti.cmd: true
+            antimulti.cmd.reload: true
+            antimulti.cmd.add: true
+            antimulti.cmd.whitelist: true
+    antimulti.mod:
+        description: Gives the basic mod commands
+        default: op
+        children:
+            antimulti.cmd.whitelist: true
+            antimulti.whitelist: true
+    antimulti.whitelist:
+        description: Allows player to login to server with AM whitelist on
+        default: op
+    antimulti.cmd:
+        description: Access to /am
+        default: op
+        command: "/am"
+    antimulti.cmd.reload:
+        description: Reloads the config
+        default: op
+        command: "/am reload"
+    antimulti.cmd.add:
+        description: Adds a player to the bypass
+        default: op
+        command: "/am add Lord_Ralex 1.2.3.4 (pword) (pword)"
+    antimulti.cmd.whitelist:
+        description: Toggles the whitelist
+        default: op
+        command: "/am whitelist"
+    #antimulti.notify:
+    #    description: Notifies player when someone tries to login
+    #    default: op
+    antimulti.register:
+        description: Lets a player register
+        default: true
+    antimulti.login:
+        default: true
+        description: Lets a player login
+    antimulti.forceRegister:
+        default: op
+        description: Forces a player to register
