@@ -303,6 +303,19 @@ public class PlayerListener implements Listener{
                 {
                     AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
                 }
+                else
+                {
+                    person.setLogin(true);
+                }
+            }
+        } else
+        {
+            if(Encoder.areEqual(pw, "None"))
+            {
+                AMLogger.sendMessage(player, "Register your account with /register [pw] [pw]", ChatColor.BLUE);
+            } else
+            {
+                AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
             }
         }
     }
