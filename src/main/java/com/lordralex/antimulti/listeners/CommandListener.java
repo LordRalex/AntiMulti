@@ -5,10 +5,7 @@
 package com.lordralex.antimulti.listeners;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.listeners.commands.Add;
-import com.lordralex.antimulti.listeners.commands.GetIPs;
-import com.lordralex.antimulti.listeners.commands.GetNames;
-import com.lordralex.antimulti.listeners.commands.HelpCommand;
+import com.lordralex.antimulti.listeners.commands.*;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.SQLDataException;
 import org.bukkit.command.Command;
@@ -22,11 +19,11 @@ import org.bukkit.command.CommandSender;
 public class CommandListener implements CommandExecutor{
     
     AntiMulti plugin;
-    public String[] cmds = {
+    static public String[] cmds = {
         "am",
         "getIPs",
         "getNames",
-        "getIP",
+        //"getIP",
         "add",
         "whitelist",
         "banall"
@@ -43,19 +40,19 @@ public class CommandListener implements CommandExecutor{
             String cmd = cmnd.getName();
             
             if(cmd.equalsIgnoreCase("am"))
-                return HelpCommand.execute();
+                return HelpCommand.execute(cs, args);
             if(cmd.equalsIgnoreCase("getIPs"))
-                return true;
+                return GetIPs.execute(cs, args);
             if(cmd.equalsIgnoreCase("getNames"))
                 return GetNames.execute(cs, args);
-            if(cmd.equalsIgnoreCase("getIP"))
-                return GetIPs.execute(cs, args);
+            //if(cmd.equalsIgnoreCase("getIP"))
+            //    return GetIPs.execute(cs, args);
             if(cmd.equalsIgnoreCase("add"))
                 return Add.execute(cs, args);
             if(cmd.equalsIgnoreCase("whitelist"))
-                return true;
+                return WhitelistCommand.execute(cs, args);
             if(cmd.equalsIgnoreCase("banall"))
-                return true;
+                return BanAll.execute(cs, args);
             return false;
         } catch (SQLDataException ex) {
             AMLogger.severe(ex);
