@@ -5,13 +5,13 @@
 package com.lordralex.antimulti.listeners;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.data.AMPlayer;
+import com.lordralex.antimulti.data.Searcher;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import com.lordralex.antimulti.data.AMPlayer;
-import com.lordralex.antimulti.data.Searcher;
 
 /**
  *
@@ -19,8 +19,7 @@ import com.lordralex.antimulti.data.Searcher;
  */
 public class BlockListener implements Listener{
 
-    public BlockListener(AntiMulti aThis) {
-        throw new UnsupportedOperationException("Not yet implemented");
+    public BlockListener() {
     }
     
     @EventHandler (priority=EventPriority.NORMAL)

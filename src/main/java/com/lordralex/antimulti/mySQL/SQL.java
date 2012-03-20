@@ -4,11 +4,11 @@
  */
 package com.lordralex.antimulti.mySQL;
 
+import com.lordralex.antimulti.config.Config;
+import com.lordralex.antimulti.loggers.AMLogger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import lib.PatPeter.SQLibrary.MySQL;
-import com.lordralex.antimulti.config.Config;
-import com.lordralex.antimulti.loggers.AMLogger;
 
 /**
  *

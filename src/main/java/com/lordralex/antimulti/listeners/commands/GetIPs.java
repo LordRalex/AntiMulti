@@ -4,11 +4,11 @@
  */
 package com.lordralex.antimulti.listeners.commands;
 
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.FileManager;
 import com.lordralex.antimulti.mySQL.SQLDataException;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 
 /**
  *

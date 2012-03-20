@@ -318,5 +318,6 @@ public class PlayerListener implements Listener{
                 AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
             }
         }
+        plugin.playersOnServer.add(person);
     }
 }

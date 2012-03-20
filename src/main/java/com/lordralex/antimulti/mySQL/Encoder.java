@@ -7,6 +7,8 @@ package com.lordralex.antimulti.mySQL;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.Provider;
+import java.security.Security;
 
 /**
  *
@@ -16,7 +18,7 @@ public class Encoder {
     
     public static String encode(String message) throws NoSuchAlgorithmException
     {
-        MessageDigest mdEnc = MessageDigest.getInstance("RSA");
+        MessageDigest mdEnc = MessageDigest.getInstance("MD5");
         mdEnc.update(message.getBytes(), 0, message.length());
         String encoded = new BigInteger(1, mdEnc.digest()).toString(16);
         return encoded;

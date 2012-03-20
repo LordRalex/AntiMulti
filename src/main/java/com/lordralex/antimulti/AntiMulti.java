@@ -46,6 +46,7 @@ public class AntiMulti extends JavaPlugin{
         }
         catch (Exception e)
         {
+            AMLogger.severe(e);
             this.getPluginLoader().disablePlugin(this);
         }
         AMLogger.info("AntiMulti started up successfully");
@@ -72,15 +73,19 @@ public class AntiMulti extends JavaPlugin{
     private void setUpListeners()
     {
         pListener = new PlayerListener(this);
-        bListener = new BlockListener(this);
+        bListener = new BlockListener();
         cListener = new CommandListener(this);
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(bListener, this);
         pm.registerEvents(pListener, this);
-        for(String cmd: cListener.cmds)
-        {
-            getCommand(cmd).setExecutor(cListener);
-        }
+        getCommand("am").setExecutor(cListener);
+        getCommand("getIPs").setExecutor(cListener);
+        getCommand("getNames").setExecutor(cListener);
+        getCommand("add").setExecutor(cListener);
+        getCommand("whitelist").setExecutor(cListener);
+        getCommand("banall").setExecutor(cListener);
+        getCommand("register").setExecutor(cListener);
+        getCommand("login").setExecutor(cListener);
     }
     
     public File getFolder() {

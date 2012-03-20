@@ -23,10 +23,11 @@ public class CommandListener implements CommandExecutor{
         "am",
         "getIPs",
         "getNames",
-        //"getIP",
         "add",
         "whitelist",
-        "banall"
+        "banall",
+        "register",
+        "login"
     };
     
     public CommandListener(AntiMulti aPlugin)

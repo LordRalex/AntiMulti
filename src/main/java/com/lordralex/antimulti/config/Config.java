@@ -4,13 +4,13 @@
  */
 package com.lordralex.antimulti.config;
 
+import com.lordralex.antimulti.AntiMulti;
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
-import com.lordralex.antimulti.AntiMulti;
-import org.bukkit.ChatColor;
 
 /**
  *

@@ -4,9 +4,9 @@
  */
 package com.lordralex.antimulti.data;
 
-import org.bukkit.entity.Player;
 import com.lordralex.antimulti.AntiMulti;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 /**
  *
@@ -22,17 +22,14 @@ public class Searcher {
     
     public static AMPlayer findPlayer(Player player)
     {
-        for(AMPlayer possible: plugin.playersOnServer)
-            if(possible.player.equals(player))
-                return possible;
         return findPlayer(player.getName());
     }   
     
     public static AMPlayer findPlayer(String name)
     {
-        Player player = Bukkit.getServer().getPlayerExact(name);
-        if(player == null)
-            return null;
-        return findPlayer(player);
+        for(AMPlayer possible: plugin.playersOnServer)
+            if(possible.player.getName().equals(name))
+                return possible;
+        return null;
     }
 }
