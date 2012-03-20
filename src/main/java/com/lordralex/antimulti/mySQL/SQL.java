@@ -38,6 +38,11 @@ public class SQL {
         doesDBExist();
     }
     
+    public static void disconnect()
+    {
+        mysql.close();
+    }
+    
     private static void doesDBExist()
     {
         if(!mysql.checkTable("ipdb"))

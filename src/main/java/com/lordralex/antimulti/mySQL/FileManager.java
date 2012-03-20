@@ -4,19 +4,19 @@
  */
 package com.lordralex.antimulti.mySQL;
 
+import com.lordralex.antimulti.config.Config;
+import com.lordralex.antimulti.data.AMPlayer;
+import com.lordralex.antimulti.loggers.AMLogger;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import com.lordralex.antimulti.config.Config;
-import com.lordralex.antimulti.data.AMPlayer;
-import com.lordralex.antimulti.loggers.AMLogger;
-import java.util.ArrayList;
 
 /**
  *
@@ -33,12 +33,21 @@ public class FileManager {
     
     public static void openConnection()
     {
+        testConnection();
         if(useSQL) {
             SQL.connect();
             AMLogger.info("Connection made to mySQL database");
         }
         else
             AMLogger.info("Cannot connect to the mySQL, using flat-files");
+    }
+    
+    public static void closeConnection()
+    {
+        if(useSQL)
+        {
+            SQL.disconnect();
+        }
     }
     
     public static String[] getNames(String ip) throws SQLDataException
