@@ -6,11 +6,11 @@ package com.lordralex.antimulti.data;
 
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import com.lordralex.antimulti.mySQL.Encoder;
-import com.lordralex.antimulti.mySQL.SQL;
+import com.lordralex.antimulti.mySQL.FileManager;
+import java.io.IOException;
 
 /**
  *
@@ -74,7 +74,7 @@ public class AMPlayer {
         loggedIn = income;
     }
     
-    public boolean setPassword(String newP, String newP2) throws NoSuchAlgorithmException
+    public boolean setPassword(String newP, String newP2) throws NoSuchAlgorithmException, IOException
     {
         if(!newP.equals(newP2))
             return false;
@@ -82,7 +82,7 @@ public class AMPlayer {
         if(!newPass.equals(password))
             return false;
         password = newPass;
-        SQL.setPW(player.getName(), password);
+        FileManager.setPW(player.getName(), password);
         return true;
     }
 }
