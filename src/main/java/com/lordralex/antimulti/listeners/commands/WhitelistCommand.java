@@ -4,7 +4,6 @@
  */
 package com.lordralex.antimulti.listeners.commands;
 
-import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Config;
 import com.lordralex.antimulti.loggers.AMLogger;
 import org.bukkit.Bukkit;
