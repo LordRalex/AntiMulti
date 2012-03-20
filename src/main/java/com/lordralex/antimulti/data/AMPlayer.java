@@ -4,13 +4,13 @@
  */
 package com.lordralex.antimulti.data;
 
+import com.lordralex.antimulti.mySQL.Encoder;
+import com.lordralex.antimulti.mySQL.FileManager;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import com.lordralex.antimulti.mySQL.Encoder;
-import com.lordralex.antimulti.mySQL.FileManager;
-import java.io.IOException;
 
 /**
  *
@@ -20,7 +20,6 @@ public class AMPlayer {
     
     public Player player;
     private String password;
-    public int id;
     public boolean loggedIn;
     public Location loginSpot;
     
@@ -28,24 +27,21 @@ public class AMPlayer {
     {
         player = null;
         password = null;
-        id = -1;
         loggedIn = false;
         loginSpot = null;
     }
     
-    public AMPlayer(Player person, int id)
+    public AMPlayer(Player person)
     {
         player = person;
-        this.id = id;
         password = "None";
         loginSpot = person.getLocation();
         loggedIn = false;
     }
     
-    public AMPlayer(Player person, int id, String pass)
+    public AMPlayer(Player person, String pass)
     {
         player = person;
-        this.id = id;
         password = pass;
         loginSpot = person.getLocation();
         loggedIn = false;
@@ -78,10 +74,7 @@ public class AMPlayer {
     {
         if(!newP.equals(newP2))
             return false;
-        String newPass = Encoder.encode(newP);
-        if(!newPass.equals(password))
-            return false;
-        password = newPass;
+        password = Encoder.encode(newP);
         FileManager.setPW(player.getName(), password);
         return true;
     }

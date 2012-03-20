@@ -31,6 +31,8 @@ public class Searcher {
     public static AMPlayer findPlayer(String name)
     {
         Player player = Bukkit.getServer().getPlayerExact(name);
+        if(player == null)
+            return null;
         return findPlayer(player);
     }
 }

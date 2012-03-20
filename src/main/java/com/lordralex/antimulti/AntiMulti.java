@@ -22,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class AntiMulti extends JavaPlugin{
     
-    ArrayList<AMPlayer> playersOnServer = new ArrayList<AMPlayer>();
+    public ArrayList<AMPlayer> playersOnServer = new ArrayList<AMPlayer>();
     PlayerListener pListener;
     CommandListener cListener;
     BlockListener bListener;

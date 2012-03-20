@@ -143,6 +143,32 @@ public class FileManager {
         }
     }
     
+    public static void addName(byte[] ip, String name) throws IOException, SQLDataException
+    {
+        String newIP = "";
+        for(int i=0; i < ip.length; i++)
+            newIP += ip[i];
+        addName(newIP, name);
+    }
+    
+    public static void addName(Player player) throws IOException, SQLDataException
+    {
+        addName(player.getAddress().getAddress().getAddress(), player.getName());
+    }
+    
+    public static void addIP(Player player) throws IOException, SQLDataException
+    {
+        addIP(player.getName(), player.getAddress().getAddress().getAddress());
+    }
+    
+    public static void addIP(String name, byte[] ip) throws IOException, SQLDataException
+    {
+        String newIP = "";
+        for(int i=0; i < ip.length; i++)
+            newIP += ip[i];
+        addIP(name, newIP);
+    }
+    
     public static void addIP(String name, String IP) throws IOException, SQLDataException
     {
         if(useSQL)

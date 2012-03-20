@@ -41,6 +41,7 @@ public class Config {
     public static int maxUser;
     public static int maxIP;
     public static int timedKick;
+    public static int travelDistance;
     
     public Config(AntiMulti aPlugin)
     {
@@ -65,6 +66,7 @@ public class Config {
         timedKick = config.getInt("options.time-kick", 30);
         enableProtectPerm = config.getBoolean("options.perm-protection", true);
         fake_online_mode = config.getBoolean("options.online-mode", Bukkit.getServer().getOnlineMode());
+        travelDistance = config.getInt("options.travel-distance", 5);
         host = config.getString("mySQL.host", "127.0.0.1");
         port = config.getInt("mySQL.port", 3306);
         database = config.getString("mySQL.database", "antimulti");
@@ -80,6 +82,7 @@ public class Config {
         config.set("options.time-kick", timedKick);
         config.set("options.perm-protection", enableProtectPerm);
         config.set("options.online-mode", fake_online_mode);
+        config.set("options.travel-distance", travelDistance);
         config.set("mySQL.host", null);
         config.set("mySQL.port", null);
         config.set("mySQL.database", null);
