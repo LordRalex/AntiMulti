@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import com.lordralex.antimulti.config.Config;
 import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.loggers.AMLogger;
+import java.util.ArrayList;
 
 /**
  *
@@ -116,12 +117,54 @@ public class FileManager {
         return getPW(player.getName());
     }
     
-    private void saveConfig(FileConfiguration config, File file) throws IOException
+    public static void setPW(String name, String newP) throws IOException
     {
-        if(config == null || file == null)
-            return;
-        if(!file.exists())
-            file.mkdirs();
-        config.save(file);
+        if(useSQL)
+            SQL.setPW(name, newP);
+        else
+        {
+            File fileReader = new File(Config.dataPath + "login" + File.separator);
+            FileConfiguration config = YamlConfiguration.loadConfiguration(fileReader);
+            config.set("password", newP);
+            config.save(fileReader);
+        }
+    }
+    
+    public static void addName(String IP, String name) throws IOException, SQLDataException
+    {
+        if(useSQL)
+            SQL.addName(IP, name);
+        else
+        {
+            File fileReader = new File(Config.dataPath + "IP" + File.separator + name + ".yml");
+            FileConfiguration config = YamlConfiguration.loadConfiguration(fileReader);
+            config.set("names", config.getStringList("names"));
+            config.save(fileReader);
+        }
+    }
+    
+    public static void addIP(String name, String IP) throws IOException, SQLDataException
+    {
+        if(useSQL)
+            SQL.addIP(name, IP);
+        else
+        {
+            File fileReader = new File(Config.dataPath + "name" + File.separator + IP + ".yml");
+            FileConfiguration config = YamlConfiguration.loadConfiguration(fileReader);
+            if(fileReader.exists())
+            {
+                config.set("original", IP);
+            }
+            else
+            {
+                config.set("original", config.getString("original"));
+                List<String> list = config.getStringList("alts");
+                ArrayList<String> newOnes = new ArrayList<String>();
+                newOnes.addAll(list);
+                newOnes.add(IP);
+                config.set("alts", newOnes);
+                config.save(fileReader);
+            }
+        }
     }
 }
