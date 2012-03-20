@@ -6,6 +6,7 @@ package com.lordralex.antimulti.data;
 
 import org.bukkit.entity.Player;
 import com.lordralex.antimulti.AntiMulti;
+import org.bukkit.Bukkit;
 
 /**
  *
@@ -21,17 +22,15 @@ public class Searcher {
     
     public static AMPlayer findPlayer(Player player)
     {
+        for(AMPlayer possible: plugin.playersOnServer)
+            if(possible.player.equals(player))
+                return possible;
         return findPlayer(player.getName());
     }   
     
     public static AMPlayer findPlayer(String name)
     {
-        AMPlayer found = null;
-        for(AMPlayer possible: plugin.playersOnServer)
-        {
-            if(possible != null && name.equals(possible.getName()))
-                found = possible;
-        }
-        return found;
+        Player player = Bukkit.getServer().getPlayerExact(name);
+        return findPlayer(player);
     }
 }
