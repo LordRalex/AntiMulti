@@ -1,11 +1,35 @@
 name: AntiMulti
-main: src.com.lordralex.antimulti.AntiMulti
+main: com.lordralex.antimulti.AntiMulti
 version: 2.0.0
 author: Lord_Ralex
 description: AntiMulti- Prevents IP sharing to put it bluntly
 categories: [ADMIN]
 commands:
     am:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    getIPs:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    getNames:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    add:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    whitelist:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    add:
+        description: 'Access the commands of AntiMulti'
+        permission: antimulti.cmd
+        aliases: [antimulti]
+    banall:
         description: 'Access the commands of AntiMulti'
         permission: antimulti.cmd
         aliases: [antimulti]

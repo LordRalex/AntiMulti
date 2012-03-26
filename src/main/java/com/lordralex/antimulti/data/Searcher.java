@@ -5,7 +5,6 @@
 package com.lordralex.antimulti.data;
 
 import com.lordralex.antimulti.AntiMulti;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,7 +15,7 @@ public class Searcher {
     
     private static AntiMulti plugin;
     
-    public Searcher(AntiMulti aPlugin){
+    public static void setup(AntiMulti aPlugin) {
         plugin = aPlugin;
     }
     

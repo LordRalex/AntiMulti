@@ -13,6 +13,7 @@ import com.lordralex.antimulti.listeners.PlayerListener;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.FileManager;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -64,10 +65,10 @@ public class AntiMulti extends JavaPlugin{
         AMLogger.info("AntiMulti has shut down");
     }
     
-    private void setUpClasses()
+    private void setUpClasses() throws IOException
     {
-        new Searcher(this);
-        new Config(this);
+        Searcher.setup(this);
+        Config.loadConfig(this);
     }
     
     private void setUpListeners()

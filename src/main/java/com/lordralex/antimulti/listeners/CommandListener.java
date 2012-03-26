@@ -8,6 +8,7 @@ import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.listeners.commands.*;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.SQLDataException;
+import java.io.IOException;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -46,8 +47,6 @@ public class CommandListener implements CommandExecutor{
                 return GetIPs.execute(cs, args);
             if(cmd.equalsIgnoreCase("getNames"))
                 return GetNames.execute(cs, args);
-            //if(cmd.equalsIgnoreCase("getIP"))
-            //    return GetIPs.execute(cs, args);
             if(cmd.equalsIgnoreCase("add"))
                 return Add.execute(cs, args);
             if(cmd.equalsIgnoreCase("whitelist"))
@@ -55,6 +54,9 @@ public class CommandListener implements CommandExecutor{
             if(cmd.equalsIgnoreCase("banall"))
                 return BanAll.execute(cs, args);
             return false;
+        } catch (IOException ex) {
+            AMLogger.severe(ex);
+            return true;
         } catch (SQLDataException ex) {
             AMLogger.severe(ex);
             return true;

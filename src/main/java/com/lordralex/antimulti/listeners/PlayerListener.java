@@ -77,7 +77,11 @@ public class PlayerListener implements Listener{
         event.setJoinMessage(null);
         Player player = event.getPlayer();
         try {
-            STATUS result = offlineCache(player);
+            STATUS result;
+            result = whitelistTest(player);
+            if(result != STATUS.ALLOWED)
+                return;
+            result = offlineCache(player);
             if(result != STATUS.ALLOWED)
                 return;
             result = ipTest(player);
@@ -97,11 +101,18 @@ public class PlayerListener implements Listener{
         if(event.isCancelled())
             return;
         AMPlayer player = Searcher.findPlayer(event.getPlayer());
-        if(player == null || !player.loggedIn)
-        {
-            event.setCancelled(true);
-            event.setMessage("");
-        }
+        String message = event.getMessage();
+        if(player.loggedIn)
+            AMLogger.info("Player " + player.getName() + " is already logged in");
+        else
+            AMLogger.info("Player " + player.getName() + "'s message is " + message);
+        if(!player.loggedIn)
+            if(!(message.startsWith("/register") || message.startsWith("/login")))
+            {
+                AMLogger.info("Message cancelled");
+                event.setCancelled(true);
+                event.setMessage("");
+            }
     }
     
     @EventHandler(priority = EventPriority.NORMAL)
@@ -210,7 +221,7 @@ public class PlayerListener implements Listener{
         return STATUS.ALLOWED;
     }
     
-    private STATUS offlineCache(Player user) throws NoSuchAlgorithmException, SQLDataException
+    private STATUS offlineCache(Player user) throws NoSuchAlgorithmException, SQLDataException, IOException
     {
         if(Config.fake_online_mode && !Bukkit.getServer().getOnlineMode())
         {
@@ -287,35 +298,40 @@ public class PlayerListener implements Listener{
         AMPlayer person = new AMPlayer(player);
         String pw = FileManager.getPW(player);
         person.setPassword(pw, pw);
+        person.setLogin(true);
         if(!Config.enableLogin)
         {
             if(Config.enableProtectPerm && player.hasPermission("antimulti.forceRegister"))
             {
-                if(Encoder.areEqual(pw, "None"))
+                if(Encoder.areEqual(pw, Encoder.encode("None")))
                 {
                     AMLogger.sendMessage(player, "Register your account with /register [pw] [pw]", ChatColor.BLUE);
+                    person.setLogin(false);
                 } else
                 {
                     AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
+                    person.setLogin(false);
                 }
             } else {
-                if(!Encoder.areEqual(pw, "None"))
+                if(!Encoder.areEqual(pw, Encoder.encode("None")))
                 {
                     AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
+                    person.setLogin(false);
                 }
                 else
                 {
-                    person.setLogin(true);
+                    person.login(pw);
                 }
             }
-        } else
-        {
-            if(Encoder.areEqual(pw, "None"))
+        } else {
+            if(Encoder.areEqual(pw, Encoder.encode("None")))
             {
                 AMLogger.sendMessage(player, "Register your account with /register [pw] [pw]", ChatColor.BLUE);
+                person.setLogin(false);
             } else
             {
                 AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
+                person.setLogin(false);
             }
         }
         plugin.playersOnServer.add(person);

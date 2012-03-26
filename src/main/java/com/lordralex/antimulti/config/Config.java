@@ -44,22 +44,16 @@ public class Config {
     public static int timedKick;
     public static int travelDistance;
     
-    public Config(AntiMulti aPlugin)
+    public static void loadConfig(AntiMulti plugin) throws IOException
     {
-        plugin = aPlugin;
-        pluginInfo = plugin.getDescriptionFile();
-    }
-    
-    public void loadConfig() throws IOException
-    {
-        dataPath = plugin.getFolder();
+        dataPath = new File(plugin.getFolder() + File.separator);
         FileConfiguration config = plugin.getConfigFile();
         if(!dataPath.exists())
             dataPath.mkdirs();
         messageIPShared = config.getString("messages.shared_ip", "IP used too many times");
         messageWhitelist = config.getString("messages.whitelist", "Whitelist active");
         enableLogin = config.getBoolean("enable.login", false);
-        enableIPCheck = config.getBoolean("enable.ip_check", false);
+        enableIPCheck = config.getBoolean("enable.ip_check", true);
         enableWhitelist = config.getBoolean("enable.whitelist", false);
         enableReloadKick = true;
         maxUser = config.getInt("options.max-names-per-ip", 1);
@@ -84,12 +78,12 @@ public class Config {
         config.set("options.perm-protection", enableProtectPerm);
         config.set("options.online-mode", fake_online_mode);
         config.set("options.travel-distance", travelDistance);
-        config.set("mySQL.host", null);
-        config.set("mySQL.port", null);
-        config.set("mySQL.database", null);
-        config.set("mySQL.user", null);
-        config.set("mySQL.pass", null);
-        config.set("version", pluginInfo.getVersion());
+        config.set("mySQL.host", host);
+        config.set("mySQL.port", port);
+        config.set("mySQL.database", database);
+        config.set("mySQL.user", user);
+        config.set("mySQL.pass", pass);
+        config.set("version", plugin.getDescriptionFile().getVersion());
         config.save(dataPath + File.separator + "config.yml");
         if(!Bukkit.getServer().getOnlineMode() && fake_online_mode)
         {
@@ -100,7 +94,7 @@ public class Config {
         messageWhitelist = magic(messageWhitelist);
     }
 
-    private String magic(String string) {
+    private static String magic(String string) {
         string = string.replace("&1", ChatColor.DARK_BLUE + "");
         string = string.replace("&2", ChatColor.DARK_GREEN + "");
         string = string.replace("&3", ChatColor.DARK_AQUA + "");

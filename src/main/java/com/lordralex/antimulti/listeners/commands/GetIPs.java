@@ -7,6 +7,7 @@ package com.lordralex.antimulti.listeners.commands;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.FileManager;
 import com.lordralex.antimulti.mySQL.SQLDataException;
+import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -16,7 +17,7 @@ import org.bukkit.command.CommandSender;
  */
 public class GetIPs {
     
-    public static boolean execute(CommandSender sender, String[] args) throws SQLDataException
+    public static boolean execute(CommandSender sender, String[] args) throws SQLDataException, IOException
     {
         if(args.length == 0)
         {

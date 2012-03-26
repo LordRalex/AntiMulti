@@ -16,13 +16,7 @@ package lib.PatPeter.SQLibrary;
  * Both
  */
 //import java.net.MalformedURLException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-//import java.util.logging.Logger;
+import java.sql.*;
 import java.util.logging.Logger;
 //import com.sun.rowset.JdbcRowSetImpl;
 
@@ -85,8 +79,8 @@ public class MySQL extends DatabaseHandler {
 				url = "jdbc:mysql://" + this.hostname + ":" + this.portnmbr + "/" + this.database;
 				return DriverManager.getConnection(url, this.username, this.password);
 		    } catch (SQLException e) {
-		    	this.writeError(url,true);
-		    	this.writeError("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".", true);
+		    	//this.writeError(url,true);
+		    	//this.writeError("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".", true);
 		    }
 		}
 		return null;
