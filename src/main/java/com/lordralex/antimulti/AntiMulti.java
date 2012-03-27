@@ -21,6 +21,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.milkbowl.vault.permission.Permission;
+
 /**
  *
  * @author Joshua
@@ -31,6 +33,7 @@ public class AntiMulti extends JavaPlugin{
     PlayerListener pListener;
     CommandListener cListener;
     BlockListener bListener;
+    public static Permission perms = null;
         
     @Override
     public void onEnable()
@@ -44,6 +47,7 @@ public class AntiMulti extends JavaPlugin{
             setUpListeners();
             setUpClasses();
             FileManager.openConnection();
+            setupPermissions();
         }
         catch (Exception e)
         {
@@ -51,6 +55,7 @@ public class AntiMulti extends JavaPlugin{
             this.getPluginLoader().disablePlugin(this);
         }
         AMLogger.info("AntiMulti started up successfully");
+        getCommand("something").setExecutor(cListener);
     }
     
     @Override
@@ -89,15 +94,14 @@ public class AntiMulti extends JavaPlugin{
         getCommand("login").setExecutor(cListener);
     }
     
-    public File getFolder() {
-        return this.getDataFolder();
-    }
-    
-    public FileConfiguration getConfigFile(){
-        return this.getConfig();
-    }
-
-    public PluginDescriptionFile getDescriptionFile() {
-        return this.getDescription();
+    public void setupPermissions()
+    {
+        if(getServer().getPluginManager().isPluginEnabled("Vault"))
+        {
+            perms = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
+        }
+        else {
+            perms = null;
+        }
     }
 }

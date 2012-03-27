@@ -32,6 +32,8 @@ import org.bukkit.event.player.*;
 public class PlayerListener implements Listener{
     
     AntiMulti plugin;
+    boolean bufferTriggered = false;
+    int tid;
 
     public PlayerListener(AntiMulti aThis) {
         plugin = aThis;
@@ -60,15 +62,29 @@ public class PlayerListener implements Listener{
     @EventHandler (priority=EventPriority.MONITOR)
     public void onPlayerLogin(PlayerLoginEvent event)
     {
+        if(bufferTriggered)
+        {
+            event.getPlayer().kickPlayer("Login buffer, please try again");
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Login buffer, please try again");
+        }
+        tid = Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run(){
+                bufferTriggered = false;
+            }
+        }, Config.bufferDelay);
+        bufferTriggered = true;
         Player user = event.getPlayer();
         String name = user.getName();
         for(Player player: Bukkit.getServer().getOnlinePlayers())
+        {
             if(player.getName().equals(name))
             {
                 user.kickPlayer("Player is already in the server");
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Player is already in the server");
                 return;
             }
+        }
     }
     
     @EventHandler (priority=EventPriority.MONITOR)

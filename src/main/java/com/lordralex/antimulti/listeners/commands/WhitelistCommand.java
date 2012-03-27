@@ -4,7 +4,9 @@
  */
 package com.lordralex.antimulti.listeners.commands;
 
+import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Config;
+import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -19,6 +21,11 @@ public class WhitelistCommand {
     
     public static boolean execute(CommandSender input, String[] args)
     {
+        {
+            if ((AntiMulti.perms != null && AntiMulti.perms.has(input, "antimulti.cmd.add")) || input.hasPermission("antimulti.cmd.add")) {
+                AMLogger.sendMessage(input, CommandListener.noPermission, ChatColor.RED);
+            }
+        }
         if(args.length == 0 || args[0].equalsIgnoreCase("status"))
         {
             String message = "The group whitelist is currently ";

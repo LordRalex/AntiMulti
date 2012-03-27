@@ -4,7 +4,6 @@
  */
 package com.lordralex.antimulti.listeners;
 
-import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.data.Searcher;
 import org.bukkit.event.EventHandler;

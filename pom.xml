@@ -43,9 +43,15 @@
     </build>
     <dependencies>
         <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>vault</artifactId>
+            <version>1.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.2.3-R0.3-SNAPSHOT</version>
+            <artifactId>craftbukkit</artifactId>
+            <version>1.2.4-R0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <repositories>

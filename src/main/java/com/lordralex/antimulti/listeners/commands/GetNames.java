@@ -4,6 +4,8 @@
  */
 package com.lordralex.antimulti.listeners.commands;
 
+import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
 import com.lordralex.antimulti.mySQL.FileManager;
 import com.lordralex.antimulti.mySQL.SQLDataException;
@@ -19,6 +21,11 @@ public class GetNames {
     
     public static boolean execute(CommandSender sender, String[] args) throws SQLDataException, IOException
     {
+        {
+            if ((AntiMulti.perms != null && AntiMulti.perms.has(sender, "antimulti.cmd.add")) || sender.hasPermission("antimulti.cmd.add")) {
+                AMLogger.sendMessage(sender, CommandListener.noPermission, ChatColor.RED);
+            }
+        }
         if(args.length == 0)
         {
             AMLogger.sendMessage(sender, "You did not put an ip to search", ChatColor.RED);

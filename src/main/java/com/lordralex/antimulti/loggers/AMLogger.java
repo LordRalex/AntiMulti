@@ -17,7 +17,7 @@ import org.bukkit.entity.Player;
  */
 public class AMLogger {
     
-    private static final Logger log = Logger.getLogger("AntiMulti");
+    private static final Logger log = Bukkit.getLogger();
     ChatColor RED = ChatColor.RED;
     ChatColor GREEN = ChatColor.GREEN;
     

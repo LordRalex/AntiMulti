@@ -42,9 +42,9 @@ public class FileManager {
             AMLogger.info("Cannot connect to the mySQL, using flat-files");
             if(!Config.dataPath.exists())
                 Config.dataPath.mkdirs();
-            File login = new File(Config.dataPath + File.separator + File.separator + "login" + File.separator);
-            File ip = new File(Config.dataPath + File.separator + File.separator + "IP" + File.separator);
-            File name = new File(Config.dataPath + File.separator + File.separator + "name" + File.separator);
+            File login = new File(Config.dataPath + File.separator + "login" + File.separator);
+            File ip = new File(Config.dataPath + File.separator + "IP" + File.separator);
+            File name = new File(Config.dataPath + File.separator + "name" + File.separator);
             if(!login.exists())
                 login.mkdirs();
             if(!ip.exists())

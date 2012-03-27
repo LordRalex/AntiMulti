@@ -8,7 +8,6 @@ import com.lordralex.antimulti.AntiMulti;
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.PluginDescriptionFile;
 
@@ -43,11 +42,12 @@ public class Config {
     public static int maxIP;
     public static int timedKick;
     public static int travelDistance;
+    public static int bufferDelay;
     
     public static void loadConfig(AntiMulti plugin) throws IOException
     {
-        dataPath = new File(plugin.getFolder() + File.separator);
-        FileConfiguration config = plugin.getConfigFile();
+        dataPath = new File(plugin.getDataFolder() + File.separator);
+        FileConfiguration config = plugin.getConfig();
         if(!dataPath.exists())
             dataPath.mkdirs();
         messageIPShared = config.getString("messages.shared_ip", "IP used too many times");
@@ -62,6 +62,7 @@ public class Config {
         enableProtectPerm = config.getBoolean("options.perm-protection", true);
         fake_online_mode = config.getBoolean("options.online-mode", Bukkit.getServer().getOnlineMode());
         travelDistance = config.getInt("options.travel-distance", 5);
+        bufferDelay = config.getInt("options.login-buffer", 5);
         host = config.getString("mySQL.host", "127.0.0.1");
         port = config.getInt("mySQL.port", 3306);
         database = config.getString("mySQL.database", "antimulti");
@@ -78,12 +79,13 @@ public class Config {
         config.set("options.perm-protection", enableProtectPerm);
         config.set("options.online-mode", fake_online_mode);
         config.set("options.travel-distance", travelDistance);
+        config.set("optins.login-buffer", bufferDelay);
         config.set("mySQL.host", host);
         config.set("mySQL.port", port);
         config.set("mySQL.database", database);
         config.set("mySQL.user", user);
         config.set("mySQL.pass", pass);
-        config.set("version", plugin.getDescriptionFile().getVersion());
+        config.set("version", plugin.getDescription().getVersion());
         config.save(dataPath + File.separator + "config.yml");
         if(!Bukkit.getServer().getOnlineMode() && fake_online_mode)
         {
@@ -95,22 +97,7 @@ public class Config {
     }
 
     private static String magic(String string) {
-        string = string.replace("&1", ChatColor.DARK_BLUE + "");
-        string = string.replace("&2", ChatColor.DARK_GREEN + "");
-        string = string.replace("&3", ChatColor.DARK_AQUA + "");
-        string = string.replace("&4", ChatColor.DARK_RED + "");
-        string = string.replace("&5", ChatColor.DARK_PURPLE + "");
-        string = string.replace("&6", ChatColor.GOLD + "");
-        string = string.replace("&7", ChatColor.GRAY + "");
-        string = string.replace("&8", ChatColor.DARK_GRAY + "");
-        string = string.replace("&9", ChatColor.BLUE + "");
-        string = string.replace("&a", ChatColor.GREEN + "");
-        string = string.replace("&b", ChatColor.AQUA + "");
-        string = string.replace("&c", ChatColor.RED + "");
-        string = string.replace("&d", ChatColor.LIGHT_PURPLE + "");
-        string = string.replace("&e", ChatColor.YELLOW + "");
-        string = string.replace("&f", ChatColor.WHITE + "");
-        string = string.replace("&0", ChatColor.BLACK + "");
+        string = string.replaceAll("(?i)&([0-9A-FK-OR])", "\u00A7$1");
         return string;
     }
 }

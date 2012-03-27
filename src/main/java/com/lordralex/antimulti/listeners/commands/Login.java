@@ -5,11 +5,10 @@
 package com.lordralex.antimulti.listeners.commands;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.data.AMPlayer;
+import com.lordralex.antimulti.data.Searcher;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.FileManager;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -17,7 +16,7 @@ import org.bukkit.command.CommandSender;
  *
  * @author Joshua
  */
-public class Add {
+public class Login {
 
     public static boolean execute(CommandSender cs, String[] args) {
         {
@@ -25,30 +24,25 @@ public class Add {
                 AMLogger.sendMessage(cs, CommandListener.noPermission, ChatColor.RED);
             }
         }
-        if(args.length != 2)
+        String player = cs.getName();
+        if(player == null || player.equalsIgnoreCase(""))
         {
-            AMLogger.sendMessage(cs, "You did not use the command right", ChatColor.RED);
-            AMLogger.sendMessage(cs, "/add <name> <ip>", ChatColor.RED);
+            AMLogger.sendMessage(cs, "You are not a player", ChatColor.RED);
             return true;
         }
-        String name = args[0];
-        String ip = args[1];
-        try {
-            InetAddress.getByName(ip);
-        } catch (UnknownHostException ex) {
-            AMLogger.sendMessage(cs, ip + " is not a valid IP", ChatColor.RED);
-            return true;
-        }
-        try{
-            FileManager.addIP(name, ip);
-            FileManager.addName(ip, name);
-            AMLogger.sendMessage(cs, "Player added successfully", ChatColor.GREEN);
-            return true;
-        } catch (Exception e)
+        AMPlayer person = Searcher.findPlayer(player);
+        if(person == null)
         {
-            AMLogger.sendMessage(cs, "Error adding player", ChatColor.RED);
+            AMLogger.sendMessage(cs, "Your data was not found", ChatColor.RED);
             return true;
         }
+        if(args.length != 1)
+        {
+            AMLogger.sendMessage(cs, "Please enter it only once", ChatColor.RED);
+            AMLogger.sendMessage(cs, "Like /login 123", ChatColor.RED);
+            return true;
+        }
+        return true;
     }
     
 }
