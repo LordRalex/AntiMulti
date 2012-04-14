@@ -5,10 +5,10 @@
 package com.lordralex.antimulti.listeners.commands;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.files.FileManager;
+import com.lordralex.antimulti.files.SQLDataException;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.FileManager;
-import com.lordralex.antimulti.mySQL.SQLDataException;
 import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +24,7 @@ public class BanAll {
     public static boolean execute(CommandSender input, String args[]) throws SQLDataException, IOException
     {
         {
-            if ((AntiMulti.perms != null && AntiMulti.perms.has(input, "antimulti.cmd.add")) || input.hasPermission("antimulti.cmd.add")) {
+            if ((AntiMulti.perms != null && AntiMulti.perms.has(input, "antimulti.cmd.banall")) || input.hasPermission("antimulti.cmd.banall")) {
                 AMLogger.sendMessage(input, CommandListener.noPermission, ChatColor.RED);
             }
         }

@@ -1,6 +1,6 @@
 name: AntiMulti
 main: com.lordralex.antimulti.AntiMulti
-version: 2.0.0
+version: 2.0.1
 author: Lord_Ralex
 description: AntiMulti- Prevents IP sharing to put it bluntly
 categories: [ADMIN]
@@ -10,61 +10,42 @@ commands:
         permission: antimulti.cmd
         aliases: [antimulti]
     getIPs:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
+        description: 'Get peoples ips they have used'
+        permission: antimulti.cmd.getIPs
     getNames:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
+        description: 'Get the names from an ip'
+        permission: antimulti.cmd.getNames
     add:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
+        description: 'Add a player'
+        permission: antimulti.cmd.add
     whitelist:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
-    add:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
+        description: 'Use the AM whitelist'
+        permission: antimulti.cmd.whitelist
     banall:
-        description: 'Access the commands of AntiMulti'
-        permission: antimulti.cmd
-        aliases: [antimulti]
+        description: 'Ban a bunch of folks'
+        permission: antimulti.cmd.banall
     login:
         description: 'Log in to the server'
         permission: antimulti.login
-        aliases: [amlogin,aml]
     register:
         description: 'Register your player'
         permission: antimulti.register
-        aliases: [amregister,amr]
 permissions:
     antimulti.*:
         description: Gives all nodes for Anti-Multi
         default: op
         children:
-            antimulti.cmd.*: true
-            antimulti.mod: true
             antimulti.whitelist: true
             antimulti.notify: true
             antimulti.forceRegister: true
-    antimulti.cmd.*:
-        description: Gives all commands for Anti-Multi
-        default: op
-        children:
             antimulti.cmd: true
-            antimulti.cmd.reload: true
             antimulti.cmd.add: true
             antimulti.cmd.whitelist: true
-    antimulti.mod:
-        description: Gives the basic mod commands
-        default: op
-        children:
-            antimulti.cmd.whitelist: true
-            antimulti.whitelist: true
+            antimulti.cmd.banall: true
+            antimulti.cmd.getNames: true
+            antimulti.cmd.getIPs: true
+            antimulti.register: true
+            antimulti.login: true
     antimulti.whitelist:
         description: Allows player to login to server with AM whitelist on
         default: op
@@ -72,10 +53,6 @@ permissions:
         description: Access to /am
         default: op
         command: "/am"
-    antimulti.cmd.reload:
-        description: Reloads the config
-        default: op
-        command: "/am reload"
     antimulti.cmd.add:
         description: Adds a player to the bypass
         default: op
@@ -84,9 +61,18 @@ permissions:
         description: Toggles the whitelist
         default: op
         command: "/am whitelist"
-    #antimulti.notify:
-    #    description: Notifies player when someone tries to login
-    #    default: op
+    antimulti.cmd.banall:
+        description: Bans a bunch of people
+        default: op
+        command: "/banall <name>"
+    antimulti.cmd.getNames:
+        description: Get some names
+        default: op
+        command: "/getNames <ip>"
+    antimulti.cmd.getIPs:
+        description: Get some IPs
+        default: op
+        command: "/getIPs <name>"
     antimulti.register:
         description: Lets a player register
         default: true

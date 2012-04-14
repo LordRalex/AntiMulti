@@ -4,8 +4,8 @@
  */
 package com.lordralex.antimulti.data;
 
-import com.lordralex.antimulti.mySQL.Encoder;
-import com.lordralex.antimulti.mySQL.FileManager;
+import com.lordralex.antimulti.files.Encoder;
+import com.lordralex.antimulti.files.FileManager;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.security.NoSuchAlgorithmException;
@@ -61,7 +61,7 @@ public class AMPlayer {
     {
         if(loggedIn)
             return true;
-        loggedIn = Encoder.areEqual(this.password, password);
+        loggedIn = Encoder.areEqual(this.password, Encoder.encode(password));
         return loggedIn;
     }
     
@@ -70,12 +70,22 @@ public class AMPlayer {
         loggedIn = income;
     }
     
-    public boolean setPassword(String newP, String newP2) throws NoSuchAlgorithmException, IOException
+    public boolean setPassword(String newP) throws NoSuchAlgorithmException, IOException
     {
-        if(!newP.equals(newP2))
-            return false;
         password = Encoder.encode(newP);
         FileManager.setPW(player.getName(), password);
         return true;
+    }
+    
+    public boolean setPassword(String newP, boolean override) throws NoSuchAlgorithmException, IOException
+    {
+        if(override)
+        {
+            password = newP;
+            FileManager.setPW(player.getName(), password);
+            return true;
+        }
+        else
+            return setPassword(newP);
     }
 }

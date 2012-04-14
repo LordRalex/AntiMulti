@@ -9,6 +9,7 @@ import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.data.Searcher;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
+import java.security.NoSuchAlgorithmException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -18,9 +19,9 @@ import org.bukkit.command.CommandSender;
  */
 public class Login {
 
-    public static boolean execute(CommandSender cs, String[] args) {
+    public static boolean execute(CommandSender cs, String[] args) throws NoSuchAlgorithmException {
         {
-            if ((AntiMulti.perms != null && AntiMulti.perms.has(cs, "antimulti.cmd.add")) || cs.hasPermission("antimulti.cmd.add")) {
+            if ((AntiMulti.perms != null && AntiMulti.perms.has(cs, "antimulti.cmd.login")) || cs.hasPermission("antimulti.cmd.login")) {
                 AMLogger.sendMessage(cs, CommandListener.noPermission, ChatColor.RED);
             }
         }
@@ -41,6 +42,14 @@ public class Login {
             AMLogger.sendMessage(cs, "Please enter it only once", ChatColor.RED);
             AMLogger.sendMessage(cs, "Like /login 123", ChatColor.RED);
             return true;
+        }
+        boolean result = person.login(args[0]);
+        if(result)
+        {
+            AMLogger.sendMessage(cs, "You are logged in", ChatColor.GREEN);
+        }
+        else {
+            AMLogger.sendMessage(cs, "Your password was not right", ChatColor.RED);
         }
         return true;
     }

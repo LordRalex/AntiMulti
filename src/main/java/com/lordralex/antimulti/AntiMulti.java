@@ -7,21 +7,19 @@ package com.lordralex.antimulti;
 import com.lordralex.antimulti.config.Config;
 import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.data.Searcher;
+import com.lordralex.antimulti.files.FileManager;
 import com.lordralex.antimulti.listeners.BlockListener;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.listeners.PlayerListener;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.FileManager;
-import java.io.File;
+import com.lordralex.antimulti.tracker.Metrics;
 import java.io.IOException;
 import java.util.ArrayList;
+import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.milkbowl.vault.permission.Permission;
 
 /**
  *
@@ -41,21 +39,28 @@ public class AntiMulti extends JavaPlugin{
         String version = this.getDescription().getVersion();
         AMLogger.info("[AntiMulti V" + version + "] Starting up");
         Bukkit.getScheduler().cancelTasks(this);
-        for(Player player: Bukkit.getServer().getOnlinePlayers())
+        for(Player player: Bukkit.getServer().getOnlinePlayers()) {
             player.kickPlayer("Server reloaded, please log back in");
+        }
         try{
             setUpListeners();
             setUpClasses();
             FileManager.openConnection();
             setupPermissions();
+            try {
+                Metrics metrics = new Metrics(this);
+                metrics.start();
+            } catch (Exception e) {
+                AMLogger.warning("Could not get the Metric attachment running");
+            }
+            AMLogger.info("AntiMulti started up successfully");
         }
         catch (Exception e)
         {
             AMLogger.severe(e);
             this.getPluginLoader().disablePlugin(this);
+            AMLogger.info("AntiMulti started up with errors");
         }
-        AMLogger.info("AntiMulti started up successfully");
-        getCommand("something").setExecutor(cListener);
     }
     
     @Override

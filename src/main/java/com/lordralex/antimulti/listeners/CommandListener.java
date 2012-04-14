@@ -5,15 +5,14 @@
 package com.lordralex.antimulti.listeners;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.files.SQLDataException;
 import com.lordralex.antimulti.listeners.commands.*;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.SQLDataException;
 import java.io.IOException;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 /**
  *
@@ -31,7 +30,8 @@ public class CommandListener implements CommandExecutor{
         "whitelist",
         "banall",
         "register",
-        "login"
+        "login",
+        "amreload"
     };
     
     public CommandListener(AntiMulti aPlugin)
@@ -40,28 +40,30 @@ public class CommandListener implements CommandExecutor{
     }
 
     @Override
-    public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {
+    public boolean onCommand(CommandSender cs, Command cmnd, String string, String[] args) {        
         try {
             String cmd = cmnd.getName();
-            Player user = (Player) cs;
             
             if(cmd.equalsIgnoreCase("am"))
-                return HelpCommand.execute(cs, args);
-            if(cmd.equalsIgnoreCase("getIPs"))
+                return Help.execute(cs, args);
+            else if(cmd.equalsIgnoreCase("getIPs"))
                 return GetIPs.execute(cs, args);
-            if(cmd.equalsIgnoreCase("getNames"))
+            else if(cmd.equalsIgnoreCase("getNames"))
                 return GetNames.execute(cs, args);
-            if(cmd.equalsIgnoreCase("add"))
+            else if(cmd.equalsIgnoreCase("add"))
                 return Add.execute(cs, args);
-            if(cmd.equalsIgnoreCase("whitelist"))
-                return WhitelistCommand.execute(cs, args);
-            if(cmd.equalsIgnoreCase("banall"))
+            else if(cmd.equalsIgnoreCase("whitelist"))
+                return Whitelist.execute(cs, args);
+            else if(cmd.equalsIgnoreCase("banall"))
                 return BanAll.execute(cs, args);
-            if(cmd.equalsIgnoreCase("register"))
+            else if(cmd.equalsIgnoreCase("register"))
                 return Register.execute(cs, args);
-            if(cmd.equalsIgnoreCase("login"))
+            else if(cmd.equalsIgnoreCase("login"))
                 return Login.execute(cs, args);
-            return false;
+            else if(cmd.equalsIgnoreCase("amreload"))
+                return AMReload.execute(cs, plugin);
+            else
+                return false;
         } catch (IOException ex) {
             AMLogger.severe(ex);
             AMLogger.sendMessage(cs, "Internal IOException", ChatColor.RED);

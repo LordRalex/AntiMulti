@@ -7,10 +7,10 @@ package com.lordralex.antimulti.listeners.commands;
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.data.Searcher;
+import com.lordralex.antimulti.files.Encoder;
+import com.lordralex.antimulti.files.SQLDataException;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.Encoder;
-import com.lordralex.antimulti.mySQL.SQLDataException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import org.bukkit.ChatColor;
@@ -24,7 +24,7 @@ public class Register {
 
     public static boolean execute(CommandSender cs, String[] args) throws SQLDataException, NoSuchAlgorithmException, IOException {
         {
-            if ((AntiMulti.perms != null && AntiMulti.perms.has(cs, "antimulti.cmd.add")) || cs.hasPermission("antimulti.cmd.add")) {
+            if ((AntiMulti.perms != null && AntiMulti.perms.has(cs, "antimulti.cmd.register")) || cs.hasPermission("antimulti.cmd.register")) {
                 AMLogger.sendMessage(cs, CommandListener.noPermission, ChatColor.RED);
             }
         }
@@ -43,7 +43,7 @@ public class Register {
         if(args.length != 2)
         {
             AMLogger.sendMessage(cs, "Please enter it twice", ChatColor.RED);
-            AMLogger.sendMessage(cs, "Like /am 123 123", ChatColor.RED);
+            AMLogger.sendMessage(cs, "Like /register 123 123", ChatColor.RED);
             return true;
         }
         if(!args[0].equals(args[1]))
@@ -51,10 +51,18 @@ public class Register {
             AMLogger.sendMessage(cs, "Your passwords did not match", ChatColor.RED);
             return true;
         }
-        person.setPassword(args[0], args[1]);
-        AMLogger.sendMessage(cs, "Your password is now " + args[0], ChatColor.GREEN);
-        person.login(Encoder.encode(args[0]));
-        AMLogger.sendMessage(cs, "You are now logged in", ChatColor.GREEN);
+        if(args[0].equals(args[1]))
+        {
+            person.setPassword(args[0]);
+            AMLogger.sendMessage(cs, "Your password is now " + args[0], ChatColor.GREEN);
+            person.login(Encoder.encode(args[0]));
+            AMLogger.sendMessage(cs, "You are now logged in", ChatColor.GREEN);
+        }
+        else
+        {
+            AMLogger.sendMessage(cs, "The passwords did not match", ChatColor.RED);
+        }
+        
         return true;
     }
     

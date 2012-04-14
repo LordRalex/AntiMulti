@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 
 /**
@@ -46,7 +47,7 @@ public class Config {
     
     public static void loadConfig(AntiMulti plugin) throws IOException
     {
-        dataPath = new File(plugin.getDataFolder() + File.separator);
+        dataPath = plugin.getDataFolder();
         FileConfiguration config = plugin.getConfig();
         if(!dataPath.exists())
             dataPath.mkdirs();
@@ -94,6 +95,16 @@ public class Config {
         }
         messageIPShared = magic(messageIPShared);
         messageWhitelist = magic(messageWhitelist);
+        if(enableWhitelist)
+        {
+            for(Player player: Bukkit.getServer().getOnlinePlayers())
+            {
+                if(!player.isOp() && !AntiMulti.perms.has(player, "antimulti.whitelist"))
+                {
+                    player.kickPlayer(messageWhitelist);
+                }
+            }
+        }
     }
 
     private static String magic(String string) {

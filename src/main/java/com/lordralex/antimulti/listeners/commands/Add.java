@@ -7,7 +7,7 @@ package com.lordralex.antimulti.listeners.commands;
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.listeners.CommandListener;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.FileManager;
+import com.lordralex.antimulti.files.FileManager;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.bukkit.ChatColor;

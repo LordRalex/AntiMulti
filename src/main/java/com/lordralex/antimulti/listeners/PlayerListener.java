@@ -8,10 +8,10 @@ import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Config;
 import com.lordralex.antimulti.data.AMPlayer;
 import com.lordralex.antimulti.data.Searcher;
+import com.lordralex.antimulti.files.Encoder;
+import com.lordralex.antimulti.files.FileManager;
+import com.lordralex.antimulti.files.SQLDataException;
 import com.lordralex.antimulti.loggers.AMLogger;
-import com.lordralex.antimulti.mySQL.Encoder;
-import com.lordralex.antimulti.mySQL.FileManager;
-import com.lordralex.antimulti.mySQL.SQLDataException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -23,114 +23,159 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerPreLoginEvent.Result;
 import org.bukkit.event.player.*;
 
 /**
  *
  * @author Joshua
  */
-public class PlayerListener implements Listener{
-    
+public class PlayerListener implements Listener {
+
     AntiMulti plugin;
     boolean bufferTriggered = false;
     int tid;
+    String[] reasons = {
+        "Login buffer, please try again",
+        "Player is already in the server",
+        "No login data in cache",
+        "No login data",
+        Config.messageIPShared
+    };
 
     public PlayerListener(AntiMulti aThis) {
         plugin = aThis;
     }
-    
-    @EventHandler (priority=EventPriority.NORMAL)
-    public void onPlayerQuit(PlayerQuitEvent event)
-    {
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        if(player != null) {
-            for(AMPlayer amplayer: plugin.playersOnServer)
+        if (player != null) {
+            for(int i=0; i < plugin.playersOnServer.size(); i++)
             {
+                AMPlayer amplayer = plugin.playersOnServer.get(i);
                 if(amplayer != null)
                 {
-                    if(player.equals(amplayer.player))
-                    {
-                        if(!amplayer.loggedIn)
+                    if (player.getName().equals(amplayer.player.getName())) {
+                        if (!amplayer.loggedIn) {
                             event.setQuitMessage(null);
-                        amplayer = null;
+                        }
+                        plugin.playersOnServer.remove(i);
+                        i--;
                     }
                 }
             }
         }
     }
-    
-    @EventHandler (priority=EventPriority.MONITOR)
-    public void onPlayerLogin(PlayerLoginEvent event)
-    {
-        if(bufferTriggered)
-        {
-            event.getPlayer().kickPlayer("Login buffer, please try again");
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Login buffer, please try again");
-        }
-        tid = Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run(){
-                bufferTriggered = false;
-            }
-        }, Config.bufferDelay);
-        bufferTriggered = true;
-        Player user = event.getPlayer();
-        String name = user.getName();
-        for(Player player: Bukkit.getServer().getOnlinePlayers())
-        {
-            if(player.getName().equals(name))
-            {
-                user.kickPlayer("Player is already in the server");
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Player is already in the server");
-                return;
-            }
-        }
-    }
-    
-    @EventHandler (priority=EventPriority.MONITOR)
-    public void onPlayerJoin(PlayerJoinEvent event)
-    {
-        event.setJoinMessage(null);
-        Player player = event.getPlayer();
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerLogin(PlayerLoginEvent event) {
         try {
-            STATUS result;
-            result = whitelistTest(player);
-            if(result != STATUS.ALLOWED)
-                return;
-            result = offlineCache(player);
-            if(result != STATUS.ALLOWED)
-                return;
-            result = ipTest(player);
-            if(result != STATUS.ALLOWED)
-                return;
-            loginSystem(player);
-        } catch (Exception e)
-        {
-            player.kickPlayer("An error occurred, please try again");
+            final Player th = event.getPlayer();
+            if (bufferTriggered) {
+                event.getPlayer().kickPlayer("Login buffer, please try again");
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Login buffer, please try again");
+            }
+            tid = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+
+                @Override
+                public void run() {
+                    bufferTriggered = false;
+                }
+            }, Config.bufferDelay);
+            bufferTriggered = true;
+            Player user = event.getPlayer();
+            String name = user.getName();
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (player.getName().equals(name)) {
+                    user.kickPlayer("Player is already in the server");
+                    event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Player is already in the server");
+                    return;
+                }
+            }
+            Results result = whitelistTest(user);
+            if (!result.allow) {
+                user.kickPlayer(result.message);
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, result.message);
+            }
+            result = offlineCache(user);
+            if (!result.allow) {
+                user.kickPlayer(result.message);
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, result.message);
+            }
+        } catch (Exception e) {
+            event.getPlayer().kickPlayer("An error occurred, please try again");
             AMLogger.severe(e);
         }
     }
-    
-    @EventHandler (priority=EventPriority.MONITOR)
-    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
-    {
-        if(event.isCancelled())
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerKick(PlayerKickEvent event) {
+        String reason = event.getReason();
+        for (String reasonMsg : reasons) {
+            if (reason.equals(reasonMsg)) {
+                event.setLeaveMessage(null);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        try {
+            if (!Bukkit.getServer().getOnlineMode()) {
+                event.setJoinMessage("");
+                Results result = ipTest(player);
+                if (!result.allow) {
+                    event.getPlayer().kickPlayer(result.message);
+                    event.setJoinMessage(null);
+                    return;
+                }
+            }
+
+            loginSystem(player);
+            AMPlayer person = Searcher.findPlayer(player);
+            if (person.loggedIn) {
+                event.setJoinMessage(ChatColor.YELLOW + player.getName() + " has joined");
+            }
+        } catch (Exception e) {
+            player.kickPlayer("An error occurred, please try again");
+            AMLogger.severe(e);
+            event.setJoinMessage("");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onPlayerPreLogin(PlayerPreLoginEvent event) {
+        String name = event.getName();
+        String ip = event.getName();
+        try {
+            Results result = ipTest(name, ip);
+            if (!result.allow) {
+                event.disallow(Result.KICK_OTHER, result.message);
+            }
+        } catch (Exception e) {
+            event.setKickMessage("An error occurred, please try again");
+            AMLogger.severe(e);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (event.isCancelled()) {
             return;
+        }
         AMPlayer player = Searcher.findPlayer(event.getPlayer());
         String message = event.getMessage();
-        if(player.loggedIn)
-            AMLogger.info("Player " + player.getName() + " is already logged in");
-        else
-            AMLogger.info("Player " + player.getName() + "'s message is " + message);
-        if(!player.loggedIn)
-            if(!(message.startsWith("/register") || message.startsWith("/login")))
-            {
+        if (!player.loggedIn) {
+            if (!(message.startsWith("/register") || message.startsWith("/login"))) {
                 AMLogger.info("Message cancelled");
                 event.setCancelled(true);
                 event.setMessage("");
             }
+        }
     }
-    
+
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerChat(PlayerChatEvent event) {
         AMPlayer player = Searcher.findPlayer(event.getPlayer());
@@ -185,11 +230,10 @@ public class PlayerListener implements Listener{
         AMPlayer player = Searcher.findPlayer(person);
         if (!player.loggedIn) {
             Location current = person.getLocation();
-            //math for distance
-            //Config.travelDistance;
             double distance = current.distanceSquared(player.loginSpot);
-            if(distance > Math.pow(Config.travelDistance, 2))
+            if (distance > Math.pow(Config.travelDistance, 2)) {
                 person.teleport(player.loginSpot);
+            }
         }
     }
 
@@ -216,140 +260,121 @@ public class PlayerListener implements Listener{
             event.setCancelled(true);
         }
     }
-    
-    private enum STATUS {
-        ALLOWED,
-        KICKED
-    }
-    
-    private STATUS whitelistTest(Player user)
-    {
-        if(Config.enableWhitelist)
-        {
-            if(user == null || user.isOp() || user.hasPermission("antimulti.whitelist"))
-                return STATUS.ALLOWED;
-            else
-            {
+
+    private Results whitelistTest(Player user) {
+        if (Config.enableWhitelist) {
+            if (user == null || user.isOp() || user.hasPermission("antimulti.whitelist")) {
+                return new Results();
+            } else {
                 user.kickPlayer(Config.messageWhitelist);
-                return STATUS.KICKED;
+                return new Results(Config.messageWhitelist);
             }
         }
-        return STATUS.ALLOWED;
+        return new Results();
     }
-    
-    private STATUS offlineCache(Player user) throws NoSuchAlgorithmException, SQLDataException, IOException
-    {
-        if(Config.fake_online_mode && !Bukkit.getServer().getOnlineMode())
-        {
+
+    private Results offlineCache(Player user) throws NoSuchAlgorithmException, SQLDataException, IOException {
+        if (Config.fake_online_mode && !Bukkit.getServer().getOnlineMode()) {
             String pw = FileManager.getPW(user);
-            if(pw == null || pw.equals(Encoder.encode("None")))
-            {
+            if (pw == null || pw.equals(Encoder.encode("None"))) {
                 user.kickPlayer("No login data in cache");
-                return STATUS.KICKED;
+                return new Results("No login data in cache");
             }
         }
-        return STATUS.ALLOWED;
+        return new Results();
     }
-    
-    private STATUS ipTest(Player player) throws SQLDataException, NoSuchAlgorithmException, IOException
-    {
-        if(Config.enableIPCheck)
-        {
-            String ip = player.getAddress().getAddress().getHostAddress();
-            String name = player.getName();
-            String[] ips = FileManager.getIPs(player);
-            if(!ips[0].equals(ip))
-            {
-                if(ips.length == 1)
-                {
-                    player.kickPlayer("No login data");
-                    return STATUS.KICKED;
-                } else
-                {
-                    String pw = FileManager.getPW(player);
-                    if(pw == null || Encoder.areEqual(pw, "None"))
-                    {
-                        player.kickPlayer("No login data");
-                        return STATUS.KICKED;
+
+    private Results ipTest(Player player) throws SQLDataException, NoSuchAlgorithmException, IOException {
+        return ipTest(player.getAddress().getAddress().getHostAddress(), player.getName());
+    }
+
+    private Results ipTest(String name, String ip) throws SQLDataException, NoSuchAlgorithmException, IOException {
+        if (Config.enableIPCheck) {
+            String[] ips = FileManager.getIPs(name, ip);
+            if (!ips[0].equals(ip)) {
+                if (ips.length == 1) {
+
+                    return new Results("No login data");
+                } else {
+                    String pw = FileManager.getPW(name);
+                    if (pw == null || Encoder.areEqual(pw, "None")) {
+                        return new Results("No login data");
                     }
                 }
                 boolean add = true;
-                for(String test: ips)
-                    if(test.equals(ip))
+                for (String test : ips) {
+                    if (test.equals(ip)) {
                         add = false;
-                if(add)
-                {
-                    if(ips.length >= Config.maxIP)
-                    {
-                        player.kickPlayer("IP limit reached");
-                        return STATUS.KICKED;
                     }
-                    else
-                    {
-                        FileManager.addIP(player);
+                }
+                if (add) {
+                    if (ips.length >= Config.maxIP) {
+                        return new Results(Config.messageIPShared);
+                    } else {
+                        FileManager.addIP(name, ip);
                     }
                 }
             }
-            String[] names = FileManager.getNames(player);
+            String[] names = FileManager.getNames(name, ip);
             ArrayList<String> nameList = new ArrayList<String>();
             nameList.addAll(Arrays.asList(names));
-            if(!nameList.contains(name))
-            {
-                if(nameList.size() >= Config.maxUser)
-                {
-                    player.kickPlayer(Config.messageIPShared);
-                    return STATUS.KICKED;
-                }
-                else
-                {
-                    FileManager.addName(player);
+            if (!nameList.contains(name)) {
+                if (nameList.size() >= Config.maxUser) {
+                    return new Results(Config.messageIPShared);
+                } else {
+                    FileManager.addName(ip, name);
                 }
             }
         }
-        return STATUS.ALLOWED;
+        return new Results();
     }
-    
-    private void loginSystem(Player player) throws SQLDataException, NoSuchAlgorithmException, IOException
-    {
+
+    private void loginSystem(Player player) throws SQLDataException, NoSuchAlgorithmException, IOException {
         AMPlayer person = new AMPlayer(player);
         String pw = FileManager.getPW(player);
-        person.setPassword(pw, pw);
-        person.setLogin(true);
-        if(!Config.enableLogin)
-        {
-            if(Config.enableProtectPerm && player.hasPermission("antimulti.forceRegister"))
-            {
-                if(Encoder.areEqual(pw, Encoder.encode("None")))
-                {
+        person.setPassword(pw, true);
+        person.setLogin(false);
+        if (!Config.enableLogin) {
+            if (Config.enableProtectPerm && player.hasPermission("antimulti.forceRegister")) {
+                if (Encoder.areEqual(pw, Encoder.encode("None"))) {
                     AMLogger.sendMessage(player, "Register your account with /register [pw] [pw]", ChatColor.BLUE);
-                    person.setLogin(false);
-                } else
-                {
+                } 
+                else {
                     AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
-                    person.setLogin(false);
                 }
-            } else {
-                if(!Encoder.areEqual(pw, Encoder.encode("None")))
-                {
+            } 
+            else {
+                if (Encoder.areEqual(pw, Encoder.encode("None"))) {
+                    person.setLogin(true);
+                } 
+                else {
                     AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
-                    person.setLogin(false);
-                }
-                else
-                {
-                    person.login(pw);
                 }
             }
-        } else {
-            if(Encoder.areEqual(pw, Encoder.encode("None")))
-            {
+        } 
+        else {
+            if (Encoder.areEqual(pw, Encoder.encode("None"))) {
                 AMLogger.sendMessage(player, "Register your account with /register [pw] [pw]", ChatColor.BLUE);
-                person.setLogin(false);
-            } else
-            {
+            } 
+            else {
                 AMLogger.sendMessage(player, "Please login using /login [pw]", ChatColor.BLUE);
-                person.setLogin(false);
             }
         }
         plugin.playersOnServer.add(person);
+    }
+
+    private class Results {
+
+        public boolean allow;
+        public String message;
+
+        public Results() {
+            allow = true;
+        }
+
+        public Results(String msg) {
+            message = msg;
+            allow = false;
+        }
     }
 }
