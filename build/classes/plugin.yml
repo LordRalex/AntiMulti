@@ -1,0 +1,56 @@
+name: AntiMulti
+main: com.lordralex.antimulti.AntiMulti
+version: 2.0.0
+website: http://dev.bukkit.org/server-mods/antimulti
+dev-url: http://www.minecraftforum.net/user/731553-lord-ralex/
+authors:
+  - "Lord_Ralex"
+softdepend: ["Vault"]
+database: false
+prefix: "-AntiMulti-"
+description: "The Anti-Alt Protection Plugin with some extra crap"
+commands:
+  whitelist:
+    usage: "/<command> [on|1|enable|off|0|disable|status]"
+    description: "Control the AM Whitelist"
+    permission: "antimulti.cmd.whitelist"
+    aliases: ["amwhitelist", "antimultiwhitelist", "amwl"]
+  add:
+    usage: "/<command> <name> <ip>"
+    description: "Add an IP to someone's name"
+    permission: "antimulti.cmd.add"
+permissions:
+  antimulti.*:
+    description: "All the permissions with AM"
+    default: op
+    children:
+      antimulti.cmd.*: true
+      antimulti.whitelist.*: true
+      antimulti.admin: true
+  antimulti.cmd.*:
+    description: "All the command with AM"
+    default: false
+    children:
+      antimulti.cmd.whitelist: true
+      antimulti.cmd.add: true
+  antimulti.whitelist.*:
+    default: false
+    description: "All the whitelist perms"
+    children:
+      antimulti.whitelist: true
+      antimulti.whitelist.notify: true
+  antimulti.whitelist.notify:
+    default: false
+    description: "Lets you know when the whitelist is used"
+  antimulti.whitelist:
+    default: false
+    description: "Lets you login when the whitelist is on"
+  antimulti.cmd.whitelist:
+    default: false
+    description: "Allows access to the whitelist command"
+  antimulti.cmd.add:
+    default: false
+    description: "Allows access to the add command"
+  antimulti.admin:
+    default: op
+    description: "For all it matters, they are admin"

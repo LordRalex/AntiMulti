@@ -1,0 +1,5 @@
+logins-per-second: 5
+max-ips: 2
+max-admin-ips: 1
+max-names: 1
+max-admin-names: 1
