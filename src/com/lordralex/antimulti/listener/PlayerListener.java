@@ -106,7 +106,7 @@ public class PlayerListener implements Listener {
     private boolean ip(PlayerLoginEvent event) {
         if(!checkNameToIp(event))
             return false;
-        if(!checkNameToIp(event))
+        if(!checkIpToName(event))
             return false;
         return true;
     }
@@ -140,15 +140,15 @@ public class PlayerListener implements Listener {
             names = new ArrayList<String>();
         }
         if (names.isEmpty()) {
-            names.add(ip);
+            names.add(name);
         } else if (names.contains(ip)) {
             return true;
         } else if (names.size() < maxNamesAdmin && checkPerm(event.getPlayer(), "antimulti.admin")) {
             names.add(name);
         } else if (names.size() < maxNames) {
-            names.add(ip);
+            names.add(name);
         } else {
-            event.disallow(Result.KICK_OTHER, "Too many IPs used");
+            event.disallow(Result.KICK_OTHER, "Too many names used");
             return false;
         }
         playerData.set("names", names);
@@ -158,7 +158,7 @@ public class PlayerListener implements Listener {
         } catch (IOException ex) {
             AntiMulti.logger.severe("ERROR SAVING PLAYER DATA FOLDER");
             AntiMulti.logger.severe("PLAYER: " + name);
-            AntiMulti.logger.severe("IP" + ip);
+            AntiMulti.logger.severe("IP: " + ip);
             event.disallow(Result.KICK_OTHER, "Error trying to handle you");
             return false;
         }
@@ -168,7 +168,7 @@ public class PlayerListener implements Listener {
     {
         String name = event.getPlayer().getName();
         String ip = event.getAddress().getHostAddress();
-        FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), ip + ".yml"));
+        FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), name + ".yml"));
         List<String> ips = playerData.getStringList("ips");
         if (ips == null) {
             ips = new ArrayList<String>();

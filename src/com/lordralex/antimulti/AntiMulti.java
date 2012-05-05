@@ -6,7 +6,11 @@ package com.lordralex.antimulti;
 
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.listener.PlayerListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.logging.Logger;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
@@ -29,7 +33,12 @@ public class AntiMulti extends JavaPlugin {
     public void onLoad()
     {
         String currentVersion = this.getDescription().getVersion();
-        
+        try {
+            updateThread update = new updateThread(currentVersion);
+            update.start();
+        } catch (Exception ex) {
+            logger.warning("Could not check for an update");
+        }
     }
 
     @Override
@@ -87,11 +96,33 @@ public class AntiMulti extends JavaPlugin {
     
     private class updateThread extends Thread
     {
-        String currentVersion = "2.0.0";
+        String currentVersion = "2.0.2";
+        URL versionOnline;
         
-        public updateThread(String version)
+        public updateThread(String version) throws Exception
         {
-            
+            versionOnline = new URL("https://raw.github.com/LordRalex/AntiMulti/master/version.txt");
+            currentVersion = version;
+        }
+        
+        @Override
+        public void run()
+        {
+            String line = null;
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(versionOnline.openStream()));
+                while(line == null || line.equalsIgnoreCase(""))
+                    line = in.readLine();
+                if(!line.equalsIgnoreCase(currentVersion))
+                {
+                    logger.info("[AM] Current version: " + currentVersion);
+                    logger.info("[AM] An update is available: " + line);
+                }
+                in.close();
+            } catch (IOException e)
+            {
+                logger.warning("[AM] Could not check for an update");
+            }
         }
     }            
 }
