@@ -1,5 +1,18 @@
-logins-per-second: 5
-max-ips: 2
-max-admin-ips: 1
-max-names: 1
-max-admin-names: 1
+limits:
+  member:
+    ip: 2
+    name: 2
+  admin:
+    ip: 1
+    name: 1
+throddle: 5
+messages:
+  whitelist: 'You are not whitelisted'
+  max:
+    ip: 'Too many IPs used'
+    name: 'Too many names used'
+protection:
+  ip: true
+fake-online: true
+startup:
+  whitelist: false

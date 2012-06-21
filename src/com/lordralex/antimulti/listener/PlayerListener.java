@@ -5,6 +5,7 @@
 package com.lordralex.antimulti.listener;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.config.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,8 +38,7 @@ public class PlayerListener implements Listener {
 
     public PlayerListener(AntiMulti aPlugin) {
         plugin = aPlugin;
-        FileConfiguration config = plugin.getConfig();
-        int perSec = config.getInt("logins-per-second", 5);
+        int perSec = Configuration.getLoginThroddle();
         if (perSec > 20) {
             perSec = 20;
         }
@@ -48,13 +48,9 @@ public class PlayerListener implements Listener {
             AntiMulti.logger.warning("Error with the connection rate, defaulting");
             connectionRate = 20 / 4;
         }
-        maxIPs = config.getInt("max-ips", 2);
-        maxAdminIPs = config.getInt("max-admin-ips", 1);
-        maxNames = config.getInt("max-names", 1);
-        maxNamesAdmin = config.getInt("max-admin-names", 1);
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerLoginEvent event) {
         if (event.getResult() != Result.ALLOWED) {
             return;
@@ -64,13 +60,29 @@ public class PlayerListener implements Listener {
             return;
         }
 
+        if (!checkOnline(event)) {
+            return;
+        }
+
         if (!whitelist(event)) {
+            event.setResult(Result.KICK_WHITELIST);
+            event.setKickMessage(Configuration.getWhitelistMessage());
             return;
         }
 
         if (!ip(event)) {
             return;
         }
+    }
+
+    private boolean checkOnline(PlayerLoginEvent event) {
+        String name = event.getPlayer().getName();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean throddle(PlayerLoginEvent event) {
@@ -93,21 +105,19 @@ public class PlayerListener implements Listener {
             return true;
         }
         Player player = event.getPlayer();
-        if (AntiMulti.perms == null) {
-            if (player.hasPermission("antimulti.whitelist")) {
-                return true;
-            } else if (AntiMulti.perms.has(player, "antimulti.whitelist")) {
-                return true;
-            }
-        }
-        return false;
+        if (AntiMulti.perms == null)
+            return player.hasPermission("antimulti.whitelist");
+        else
+            return AntiMulti.perms.has(player, "antimulti.whitelist");
     }
 
     private boolean ip(PlayerLoginEvent event) {
-        if(!checkNameToIp(event))
+        if (!checkNameToIp(event)) {
             return false;
-        if(!checkIpToName(event))
+        }
+        if (!checkIpToName(event)) {
             return false;
+        }
         return true;
     }
 
@@ -129,26 +139,29 @@ public class PlayerListener implements Listener {
         }
         return false;
     }
-    
-    private boolean checkIpToName(PlayerLoginEvent event)
-    {
-        String name = event.getPlayer().getName();
+
+    private boolean checkIpToName(PlayerLoginEvent event) {
+        String name = event.getPlayer().getName().toLowerCase();
         String ip = event.getAddress().getHostAddress();
         FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), ip + ".yml"));
         List<String> names = playerData.getStringList("names");
         if (names == null) {
             names = new ArrayList<String>();
         }
+        for(int i=0; i < names.size(); i++)
+        {
+            names.add(i, names.remove(i).toLowerCase());
+        }
         if (names.isEmpty()) {
             names.add(name);
-        } else if (names.contains(ip)) {
+        } else if (names.contains(name)) {
             return true;
         } else if (names.size() < maxNamesAdmin && checkPerm(event.getPlayer(), "antimulti.admin")) {
             names.add(name);
         } else if (names.size() < maxNames) {
             names.add(name);
         } else {
-            event.disallow(Result.KICK_OTHER, "Too many names used");
+            event.disallow(Result.KICK_OTHER, Configuration.getMaxNameMessage());
             return false;
         }
         playerData.set("names", names);
@@ -163,9 +176,8 @@ public class PlayerListener implements Listener {
             return false;
         }
     }
-    
-    private boolean checkNameToIp(PlayerLoginEvent event)
-    {
+
+    private boolean checkNameToIp(PlayerLoginEvent event) {
         String name = event.getPlayer().getName();
         String ip = event.getAddress().getHostAddress();
         FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), name + ".yml"));
@@ -182,7 +194,7 @@ public class PlayerListener implements Listener {
         } else if (ips.size() < maxIPs) {
             ips.add(ip);
         } else {
-            event.disallow(Result.KICK_OTHER, "Too many IPs used");
+            event.disallow(Result.KICK_OTHER, Configuration.getMaxIPMessage());
             return false;
         }
         playerData.set("ips", ips);

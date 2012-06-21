@@ -12,8 +12,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -69,5 +67,15 @@ public class Add extends CommandManager{
     public String getHelp() {
         return "add <name> <ip>";
     }
-    
+
+    @Override
+    public void reload() {
+
+    }
+
+    @Override
+    public void disable() {
+
+    }
+
 }

@@ -6,6 +6,7 @@ package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.command.CommandManager;
+import com.lordralex.antimulti.config.Configuration;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -40,7 +41,7 @@ public class Whitelist extends CommandManager {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
                     if (!checkPerm(player, "antimulti.whitelist")) {
-                        player.kickPlayer("Whitelist activated");
+                        player.kickPlayer(Configuration.getWhitelistMessage());
                     }
                 }
             }
@@ -83,5 +84,18 @@ public class Whitelist extends CommandManager {
     @Override
     public String getHelp() {
         return "whitelist <on|1|enable off|0|disable status>";
+    }
+
+    @Override
+    public void reload() {
+        if(Configuration.startWhitelist())
+        {
+            AntiMulti.pListener.toggleWhitelist(true);
+        }
+    }
+
+    @Override
+    public void disable() {
+
     }
 }
