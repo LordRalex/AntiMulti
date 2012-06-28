@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.antimulti.encryption;
 
 /**
- *
+ * @version 1.0
  * @author Joshua
+ * @since 1.2
  */
 public class AlgorithmException extends Exception {
 
@@ -15,7 +12,7 @@ public class AlgorithmException extends Exception {
      * <code>AlgorithmException</code> without detail message.
      */
     public AlgorithmException() {
-        super("An error occured during the encrption process");
+        super("An error occured during the encryption process");
     }
 
     /**

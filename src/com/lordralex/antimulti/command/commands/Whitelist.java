@@ -1,12 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.logger.AMLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,8 +12,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * @since 1.1
  * @author icelord871
+ * @version 1.0
  */
 public class Whitelist extends CommandManager {
 
@@ -53,11 +51,10 @@ public class Whitelist extends CommandManager {
                 }
             }
             if (!(sender instanceof ConsoleCommandSender)) {
-                AntiMulti.logger.info("AntiMulti whitelist has been activated");
+                AMLogger.info("AntiMulti whitelist has been activated");
             }
             return true;
-        }
-        if (newMode.equalsIgnoreCase("0") || newMode.equalsIgnoreCase("off") || newMode.equalsIgnoreCase("disable")) {
+        } else if (newMode.equalsIgnoreCase("0") || newMode.equalsIgnoreCase("off") || newMode.equalsIgnoreCase("disable")) {
             AntiMulti.pListener.toggleWhitelist(false);
             sender.sendMessage(ChatColor.GREEN + "The AntiMulti whitelist has been deactivated");
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -68,7 +65,7 @@ public class Whitelist extends CommandManager {
                 }
             }
             if (!(sender instanceof ConsoleCommandSender)) {
-                AntiMulti.logger.info("AntiMulti whitelist has been deactivated");
+                AMLogger.info("AntiMulti whitelist has been deactivated");
             }
             return true;
         }
@@ -88,14 +85,12 @@ public class Whitelist extends CommandManager {
 
     @Override
     public void reload() {
-        if(Configuration.startWhitelist())
-        {
+        if (Configuration.startWhitelist()) {
             AntiMulti.pListener.toggleWhitelist(true);
         }
     }
 
     @Override
     public void disable() {
-
     }
 }

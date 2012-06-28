@@ -8,20 +8,30 @@ import java.util.Arrays;
 /**
  * @version 1.0
  * @author Joshua
+ * @since 1.2
  */
 public class Encrypt {
 
     private static final METHOD code = METHOD.MD5;
     private static Encrypt encryption = new Encrypt();
 
-    public static String encrypt(String message) throws NoSuchAlgorithmException, AlgorithmException {
+    /**
+     * Encrypts the given message in the defined algorithm. This is hardcoded
+     * but will support admin-choice in the future. Currently uses MD5 with
+     * support for Whirlpool
+     *
+     * @param message The message to encrypt
+     * @return The new encrypted message
+     * @throws AlgorithmException
+     */
+    public static String encrypt(String message) throws AlgorithmException {
         switch (code) {
             case MD5:
                 return encryption.md5(message);
             case WHIRLPOOL:
-                return message;
+                return encryption.whirlpool(message);
             default:
-                throw new NoSuchAlgorithmException("Unable to determine correct algorithm to use");
+                throw new AlgorithmException("Unable to determine correct algorithm to use");
         }
     }
 
@@ -29,6 +39,34 @@ public class Encrypt {
 
         MD5,
         WHIRLPOOL
+    }
+
+    /**
+     * Checks to see if 2 strings are the same. This is done by also checking
+     * the encrypted state of the strings so a raw and an encrypted can be
+     * passed and tested against each other. This is done by testing 1-2, e1-2,
+     * 1-e2. If none of those match, this returns false.
+     *
+     * @param m1 Message 1 to test
+     * @param m2 Message 2 to test
+     * @return True if the messages or the encrypted states are equal, otherwise
+     * false.
+     */
+    public static boolean areEqual(String m1, String m2) {
+        try {
+            if (m1.equals(m2)) {
+                return true;
+            }
+            if (m1.equals(encrypt(m2))) {
+                return true;
+            }
+            if (encrypt(m1).equals(m2)) {
+                return true;
+            }
+            return false;
+        } catch (AlgorithmException ex) {
+            return false;
+        }
     }
 
     private String md5(String message) throws AlgorithmException {

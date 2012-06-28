@@ -1,11 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lordralex.antimulti.listener;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.logger.AMLogger;
+import com.lordralex.antimulti.utils.IPHandler;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,21 +19,27 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 /**
- *
+ * @version 1.2
  * @author icelord871
+ * @since 1.2
  */
 public class PlayerListener implements Listener {
 
-    AntiMulti plugin;
-    int connectionRate = 10;
-    int maxIPs = 2;
-    int maxAdminIPs = 1;
-    int threadID;
-    int maxNames = 1;
-    int maxNamesAdmin = 1;
-    boolean allowConnection = true;
-    boolean whitelist;
+    private AntiMulti plugin;
+    private int connectionRate = 10;
+    private int maxIPs = 2;
+    private int maxAdminIPs = 1;
+    private int threadID;
+    private int maxNames = 1;
+    private int maxNamesAdmin = 1;
+    private boolean allowConnection = true;
+    private boolean whitelist;
 
+    /**
+     * Creates the listener and sets up the local variables for use.
+     *
+     * @param aPlugin The AntiMulti instance
+     */
     public PlayerListener(AntiMulti aPlugin) {
         plugin = aPlugin;
         int perSec = Configuration.getLoginThroddle();
@@ -44,12 +48,26 @@ public class PlayerListener implements Listener {
         }
         try {
             connectionRate = 20 / perSec;
+            if (connectionRate < 1) {
+                throw new IndexOutOfBoundsException("Connection rate too low");
+            }
         } catch (Exception e) {
-            AntiMulti.logger.warning("Error with the connection rate, defaulting");
+            AMLogger.warning("Error with the connection rate, defaulting");
             connectionRate = 20 / 4;
         }
+        maxIPs = Configuration.getPlayerIPLimit();
+        maxAdminIPs = Configuration.getAdminIPLimit();
+        maxNames = Configuration.getPlayerNameLimit();
+        maxNamesAdmin = Configuration.getAdminNameLimit();
+        whitelist = Configuration.startWhitelist();
     }
 
+    /**
+     * Handles the player login event for the plugin. This is where the tests
+     * are ran to determine if the player can connect or not.
+     *
+     * @param event The PlayerLoginEvent to associate with
+     */
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerLoginEvent event) {
         if (event.getResult() != Result.ALLOWED) {
@@ -90,7 +108,7 @@ public class PlayerListener implements Listener {
             event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Try to connect again");
             return false;
         }
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+        threadID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 
             @Override
             public void run() {
@@ -105,10 +123,11 @@ public class PlayerListener implements Listener {
             return true;
         }
         Player player = event.getPlayer();
-        if (AntiMulti.perms == null)
+        if (AntiMulti.perms == null) {
             return player.hasPermission("antimulti.whitelist");
-        else
+        } else {
             return AntiMulti.perms.has(player, "antimulti.whitelist");
+        }
     }
 
     private boolean ip(PlayerLoginEvent event) {
@@ -121,14 +140,30 @@ public class PlayerListener implements Listener {
         return true;
     }
 
+    /**
+     * Toggles the AntiMulti whitelist state.
+     *
+     * @param newState The new whitelist state
+     */
     public void toggleWhitelist(boolean newState) {
         whitelist = newState;
     }
 
+    /**
+     * Returns the status of the whitelist.
+     *
+     * @return True if the whitelist is on, otherwise false
+     */
     public boolean getWhitelistStatus() {
         return whitelist;
     }
 
+    /**
+     *
+     * @param player The player to check
+     * @param permission The permission to check
+     * @return True if the player has permission, false otherwise
+     */
     public boolean checkPerm(Player player, String permission) {
         if (AntiMulti.perms == null) {
             if (player.hasPermission(permission)) {
@@ -148,8 +183,7 @@ public class PlayerListener implements Listener {
         if (names == null) {
             names = new ArrayList<String>();
         }
-        for(int i=0; i < names.size(); i++)
-        {
+        for (int i = 0; i < names.size(); i++) {
             names.add(i, names.remove(i).toLowerCase());
         }
         if (names.isEmpty()) {
@@ -169,9 +203,10 @@ public class PlayerListener implements Listener {
             playerData.save(new File(plugin.getUserFolder(), ip + ".yml"));
             return true;
         } catch (IOException ex) {
-            AntiMulti.logger.severe("ERROR SAVING PLAYER DATA FOLDER");
-            AntiMulti.logger.severe("PLAYER: " + name);
-            AntiMulti.logger.severe("IP: " + ip);
+            AMLogger.severe("ERROR SAVING PLAYER DATA FOLDER");
+            AMLogger.severe("PLAYER: " + name);
+            AMLogger.severe("IP: " + ip);
+            AMLogger.writeToFile(ex);
             event.disallow(Result.KICK_OTHER, "Error trying to handle you");
             return false;
         }
@@ -187,7 +222,7 @@ public class PlayerListener implements Listener {
         }
         if (ips.isEmpty()) {
             ips.add(ip);
-        } else if (ips.contains(ip)) {
+        } else if (IPHandler.contains(ips, ip)) {
             return true;
         } else if (ips.size() < maxAdminIPs && checkPerm(event.getPlayer(), "antimulti.admin")) {
             ips.add(ip);
@@ -202,11 +237,20 @@ public class PlayerListener implements Listener {
             playerData.save(new File(plugin.getUserFolder(), name + ".yml"));
             return true;
         } catch (IOException ex) {
-            AntiMulti.logger.severe("ERROR SAVING PLAYER DATA FOLDER");
-            AntiMulti.logger.severe("PLAYER: " + name);
-            AntiMulti.logger.severe("IP" + ip);
+            AMLogger.severe("ERROR SAVING PLAYER DATA FOLDER");
+            AMLogger.severe("PLAYER: " + name);
+            AMLogger.severe("IP" + ip);
+            AMLogger.writeToFile(ex);
             event.disallow(Result.KICK_OTHER, "Error trying to handle you");
             return false;
         }
+    }
+
+    /**
+     * Cancels the login throddle thread. This will reset the throddle, although
+     * really should not be used.
+     */
+    public void cancelLoginThroddle() {
+        Bukkit.getScheduler().cancelTask(threadID);
     }
 }
