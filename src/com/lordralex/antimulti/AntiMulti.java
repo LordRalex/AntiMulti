@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,18 +19,16 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 1.0
  */
 public class AntiMulti extends JavaPlugin {
+
     public static PlayerListener pListener;
+    updateThread update = null;
 
     @Override
     public void onLoad() {
-        //if (!(new File(getDataFolder(), "logs")).exists()) {
-        //    new File(getDataFolder(), "logs").mkdirs();
-        //}
-        //AMLogger.setup(this);
         String currentVersion = this.getDescription().getVersion();
         AMLogger.info("Loading AntiMulti " + currentVersion);
         try {
-            updateThread update = new updateThread(currentVersion);
+            update = new updateThread(currentVersion);
             update.start();
         } catch (Exception ex) {
             AMLogger.warning("[AM] Could not check for an update");
@@ -49,6 +48,18 @@ public class AntiMulti extends JavaPlugin {
                 AMLogger.info("USING FAKE ONLINE MODE");
             }
             AMLogger.info("[AM] " + this.getName() + "-" + this.getVersion() + " successfully enabled");
+            if (!update.isAlive()) {
+                String[] updateMessage = update.getUpdate();
+                if (updateMessage != null && updateMessage[0] != null) {
+                    AMLogger.info(updateMessage[0]);
+                    if (updateMessage[1] != null) {
+                        AMLogger.info(updateMessage[1]);
+                    }
+                    if (updateMessage[2] != null) {
+                        AMLogger.info(updateMessage[2]);
+                    }
+                }
+            }
         } catch (Throwable ex) {
             AMLogger.error(ex, "[AM] An error occurred on startup, disabling " + this.getName());
             Bukkit.getPluginManager().disablePlugin(this);
@@ -82,10 +93,12 @@ public class AntiMulti extends JavaPlugin {
 
         String currentVersion;
         URL versionOnline;
+        String[] update = new String[3];
 
         public updateThread(String version) throws Exception {
             versionOnline = new URL("https://raw.github.com/LordRalex/AntiMulti/master/version.txt");
             currentVersion = version;
+            update[0] = update[1] = update[2] = null;
         }
 
         @Override
@@ -97,18 +110,22 @@ public class AntiMulti extends JavaPlugin {
                     line = in.readLine();
                 }
                 if (!line.equalsIgnoreCase(currentVersion)) {
-                    AMLogger.info("[AM] Current version: " + currentVersion);
-                    AMLogger.info("[AM] An update is available: " + line);
+                    update[0] = "[AM] Current version: " + currentVersion;
+                    update[1] = "[AM] An update is available: " + line;
                 }
                 if ((line = in.readLine()) != null) {
-                    AMLogger.info("[AM] Update priority: " + line);
+                    update[2] = "[AM] Update priority: " + line;
                 }
                 in.close();
             } catch (IOException e) {
-                AMLogger.warning("[AM] Could not check for an update");
+                update[0] = "[AM] Could not check for an update";
             } catch (Exception e) {
-                AMLogger.error(e, "Error occured while checking for an update");
+                update[0] = "Error occured while checking for an update";
             }
+        }
+
+        public String[] getUpdate() {
+            return update;
         }
     }
 }
