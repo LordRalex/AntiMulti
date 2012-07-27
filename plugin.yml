@@ -1,11 +1,10 @@
 name: AntiMulti
 main: com.lordralex.antimulti.AntiMulti
-version: 2.0.3
+version: 2.0.4
 website: http://dev.bukkit.org/server-mods/antimulti
 dev-url: http://www.minecraftforum.net/user/731553-lord-ralex/
 authors:
   - "Lord_Ralex"
-softdepend: ["Vault"]
 database: false
 prefix: "[AM]"
 description: "The Anti-Alt Protection Plugin with some extra crap"
