@@ -2,7 +2,6 @@ package com.lordralex.antimulti;
 
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.config.Configuration;
-import com.lordralex.antimulti.encryption.Encrypt;
 import com.lordralex.antimulti.listener.PlayerListener;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.io.BufferedReader;
@@ -40,7 +39,6 @@ public class AntiMulti extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            System.out.println("The encrypted NONE is: " + Encrypt.encrypt("None"));
             AMLogger.info("Enabling AntiMulti");
             AMLogger.info("Server info for error purposes: " + Bukkit.getBukkitVersion());
             Configuration.loadConfig(this);
@@ -82,7 +80,7 @@ public class AntiMulti extends JavaPlugin {
 
     private class updateThread extends Thread {
 
-        String currentVersion = "2.0.4";
+        String currentVersion;
         URL versionOnline;
 
         public updateThread(String version) throws Exception {
