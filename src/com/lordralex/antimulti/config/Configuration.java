@@ -131,6 +131,10 @@ public class Configuration {
         }
     }
 
+    public static String getPluginVersion() {
+        return plugin.getDescription().getVersion();
+    }
+
     public static int getPlayerIPLimit() {
         return playerIPLimit;
     }
