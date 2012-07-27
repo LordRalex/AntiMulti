@@ -1,2 +1,5 @@
-/dist/
-/build/
+/dist/*
+/build/*
+/lib/*
+/nbproject/*
+build.xml
