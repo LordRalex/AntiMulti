@@ -123,11 +123,7 @@ public class PlayerListener implements Listener {
             return true;
         }
         Player player = event.getPlayer();
-        if (AntiMulti.perms == null) {
-            return player.hasPermission("antimulti.whitelist");
-        } else {
-            return AntiMulti.perms.has(player, "antimulti.whitelist");
-        }
+        return player.hasPermission("antimulti.whitelist");
     }
 
     private boolean ip(PlayerLoginEvent event) {
@@ -165,14 +161,7 @@ public class PlayerListener implements Listener {
      * @return True if the player has permission, false otherwise
      */
     public boolean checkPerm(Player player, String permission) {
-        if (AntiMulti.perms == null) {
-            if (player.hasPermission(permission)) {
-                return true;
-            } else if (AntiMulti.perms.has(player, permission)) {
-                return true;
-            }
-        }
-        return false;
+        return player.hasPermission(permission);
     }
 
     private boolean checkIpToName(PlayerLoginEvent event) {

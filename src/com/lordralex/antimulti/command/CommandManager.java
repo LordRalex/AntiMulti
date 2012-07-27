@@ -49,14 +49,7 @@ public abstract class CommandManager implements CommandExecutor {
         if (sender instanceof ConsoleCommandSender) {
             return true;
         }
-        if (AntiMulti.perms == null) {
-            if (sender.hasPermission(permission)) {
-                return true;
-            } else if (AntiMulti.perms.has(sender, permission)) {
-                return true;
-            }
-        }
-        return false;
+        return sender.hasPermission(permission);
     }
 
     /**
@@ -68,11 +61,7 @@ public abstract class CommandManager implements CommandExecutor {
      * @return True if player has the permission, false otherwise
      */
     public boolean checkPerm(Player player, String permission) {
-        if (AntiMulti.perms == null) {
-            return player.hasPermission(permission);
-        } else {
-            return AntiMulti.perms.has(player, permission);
-        }
+        return player.hasPermission(permission);
     }
 
     /**

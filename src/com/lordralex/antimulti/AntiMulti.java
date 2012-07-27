@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -20,8 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @since 1.0
  */
 public class AntiMulti extends JavaPlugin {
-
-    public static Permission perms = null;
     public static PlayerListener pListener;
 
     @Override
@@ -47,19 +44,6 @@ public class AntiMulti extends JavaPlugin {
             AMLogger.info("Enabling AntiMulti");
             AMLogger.info("Server info for error purposes: " + Bukkit.getBukkitVersion());
             Configuration.loadConfig(this);
-            if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-                perms = getServer().getServicesManager().getRegistration(Permission.class).getProvider();
-            } else {
-                perms = null;
-            }
-            if (perms == null) {
-                AMLogger.info("[AM] Vault not found, using SuperPerms, which is not really of much concern to you.");
-                AMLogger.info("[AM] While I prefer you used Vault, I can work with this.");
-                AMLogger.info("[AM] Your permissions should be fine anyhow.");
-            } else {
-                AMLogger.info("[AM] Using Vault for your permissions handler.");
-                AMLogger.info("[AM] This means any permissions plugin you have will be fine, usually.");
-            }
             pListener = new PlayerListener(this);
             Bukkit.getPluginManager().registerEvents(pListener, this);
             CommandManager.setup(this);
