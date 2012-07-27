@@ -1,6 +1,8 @@
 package com.lordralex.antimulti.config;
 
 import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.encryption.Encrypt;
+import com.lordralex.antimulti.encryption.Encryption;
 import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.utils.Formatter;
 import java.io.File;
@@ -67,23 +69,26 @@ public class Configuration {
         startWhitelist = config.getBoolean("start.whitelist", startWhitelist);
         overrideVanillaWL = config.getBoolean("whitelist.override-vanilla", overrideVanillaWL);
         moveBuffer = config.getInt("move-buffer", moveBuffer);
+        String encrypt = config.getString("encryption", Encryption.MD5.getName());
+        Encrypt.setEncryption(Encryption.getEncryption(encrypt));
 
-        config.set("limits.member.IP", playerIPLimit);
-        config.set("limits.member.name", playerNameLimit);
-        config.set("limits.admin.IP", adminIPLimit);
-        config.set("limits.admin.name", adminNameLimit);
-        config.set("throddle", loginThroddle);
-        config.set("messages.whitelist", whitelistMessage);
-        config.set("messages.max.ip", maxIPsUsed);
-        config.set("messages.max.name", maxNamesUsed);
-        config.set("protection.ip", useIPProt);
-        config.set("protection.password", loginUse);
-        config.set("require-login.player", playerLogin);
-        config.set("require-login.admin", adminLogin);
-        config.set("fake-online", fakeOnline);
-        config.set("start.whitelist", startWhitelist);
-        config.set("whitelist.override-vanilla", overrideVanillaWL);
-        config.set("move-buffer", moveBuffer);
+        config.set("limits.member.IP", playerIPLimit + "    #Number of IPs a player can have");
+        config.set("limits.member.name", playerNameLimit + "    #Number of names a player can have");
+        config.set("limits.admin.IP", adminIPLimit + "    #Number of IPs an admin can have");
+        config.set("limits.admin.name", adminNameLimit + "    #Number of names an admin can have");
+        config.set("throddle", loginThroddle + "    #Number of logins that can occur in a second");
+        config.set("messages.whitelist", whitelistMessage + "    #Message to kick when the whitelist is on");
+        config.set("messages.max.ip", maxIPsUsed + "    #Message to use when max IPs is reached");
+        config.set("messages.max.name", maxNamesUsed + "    #Message to use when max names is reached");
+        config.set("protection.ip", useIPProt + "    #Enables the IP system");
+        config.set("protection.password", loginUse + "    #Enables the password system");
+        config.set("require-login.player", playerLogin + "    #Forces players to login and register");
+        config.set("require-login.admin", adminLogin + "    #Forces admins to login and register");
+        config.set("fake-online", fakeOnline + "    #Enables a fake-online, where new players are not allowed and login is forced");
+        config.set("start.whitelist", startWhitelist + "    #Start the whitelist when the server starts");
+        config.set("whitelist.override-vanilla", overrideVanillaWL + "    #Whether to use the vanilla or the AM whitelist");
+        config.set("move-buffer", moveBuffer + "    #The distance a player can move while not logged in");
+        config.set("encryption", Encrypt.getEncryption() + "    #Supports md5 or whirlpool");
         config.set("version", plugin.getDescription().getVersion());
         try {
             config.save(new File(plugin.getDataFolder(), "config.yml"));
@@ -91,10 +96,11 @@ public class Configuration {
             AMLogger.error(ex, "Error saving AntiMulti config");
         }
 
-        if(fakeOnline)
-        {
+        if (fakeOnline) {
             useIPProt = true;
             loginUse = true;
+            playerLogin = true;
+            adminLogin = true;
         }
         whitelistMessage = Formatter.handleColorCodes(whitelistMessage);
         maxIPsUsed = Formatter.handleColorCodes(maxIPsUsed);
@@ -189,8 +195,7 @@ public class Configuration {
         return adminLogin;
     }
 
-    public static int getMoveBuffer()
-    {
+    public static int getMoveBuffer() {
         return moveBuffer;
     }
 
