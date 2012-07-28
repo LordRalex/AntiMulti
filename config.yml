@@ -21,3 +21,4 @@ fake-online: true
 startup:
   whitelist: false
 version: 2.0.4
+encryption: md5
