@@ -2,6 +2,7 @@ package com.lordralex.antimulti;
 
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.files.DataManager;
 import com.lordralex.antimulti.listener.PlayerListener;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.io.BufferedReader;
@@ -22,6 +23,7 @@ public class AntiMulti extends JavaPlugin {
 
     public static PlayerListener pListener;
     updateThread update = null;
+    DataManager manager;
 
     @Override
     public void onLoad() {
@@ -39,8 +41,8 @@ public class AntiMulti extends JavaPlugin {
     public void onEnable() {
         try {
             AMLogger.info("Enabling AntiMulti");
-            AMLogger.info("Server info for error purposes: " + Bukkit.getBukkitVersion());
             Configuration.loadConfig(this);
+            //manager = new DataManager(this);
             pListener = new PlayerListener(this);
             Bukkit.getPluginManager().registerEvents(pListener, this);
             CommandManager.setup(this);
@@ -87,6 +89,11 @@ public class AntiMulti extends JavaPlugin {
 
     public boolean checkForUpdate() {
         return false;
+    }
+
+    public DataManager getManager()
+    {
+        return manager;
     }
 
     private class updateThread extends Thread {

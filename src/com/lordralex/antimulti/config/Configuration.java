@@ -7,6 +7,7 @@ import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.utils.Formatter;
 import java.io.File;
 import java.io.IOException;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -33,6 +34,12 @@ public class Configuration {
     private static boolean playerLogin = false;
     private static boolean adminLogin = true;
     private static int moveBuffer = 5;
+    private static String sqlHost = "localhost";
+    private static String sqlPort = "3306";
+    private static String sqlUser = "root";
+    private static String sqlPass = "password";
+    private static String sqlDB = "database";
+    private static boolean sqlEnable = false;
 
     /**
      * Loads the config for the instance of the AntiMulti plugin passed. This
@@ -70,6 +77,12 @@ public class Configuration {
         overrideVanillaWL = config.getBoolean("whitelist.override-vanilla", overrideVanillaWL);
         moveBuffer = config.getInt("move-buffer", moveBuffer);
         String encrypt = config.getString("encryption", Encryption.MD5.getName());
+        sqlEnable = config.getBoolean("mysql.enable", sqlEnable);
+        sqlHost = config.getString("mysql.host", sqlHost);
+        sqlPort = config.getString("mysql.port", sqlPort);
+        sqlUser = config.getString("mysql.user", sqlUser);
+        sqlPass = config.getString("mysql.pass", sqlPass);
+        sqlDB = config.getString("mysql.db", sqlDB);
         Encrypt.setEncryption(Encryption.getEncryption(encrypt));
 
         config.set("limits.member.IP", playerIPLimit);
@@ -88,7 +101,13 @@ public class Configuration {
         config.set("start.whitelist", startWhitelist);
         config.set("whitelist.override-vanilla", overrideVanillaWL);
         config.set("move-buffer", moveBuffer);
-        config.set("encryption", Encrypt.getEncryption());
+        config.set("encryption", Encrypt.getEncryption().getName());
+        config.set("mysql.enable", sqlEnable);
+        config.set("mysql.host", sqlHost);
+        config.set("mysql.port", sqlPort);
+        config.set("mysql.user", sqlUser);
+        config.set("mysql.pass", sqlPass);
+        config.set("mysql.db", sqlDB);
         config.set("version", plugin.getDescription().getVersion());
         try {
             config.save(new File(plugin.getDataFolder(), "config.yml"));
@@ -96,7 +115,7 @@ public class Configuration {
             AMLogger.error(ex, "Error saving AntiMulti config");
         }
 
-        if (fakeOnline) {
+        if (fakeOnline && !Bukkit.getOnlineMode()) {
             useIPProt = true;
             loginUse = true;
             playerLogin = true;
@@ -140,7 +159,7 @@ public class Configuration {
     }
 
     public static boolean fakeOnline() {
-        return fakeOnline;
+        return (fakeOnline && !Bukkit.getOnlineMode());
     }
 
     public static int getPlayerNameLimit() {
@@ -205,5 +224,19 @@ public class Configuration {
 
     public static void reloadConfig() {
         loadConfig(plugin);
+    }
+
+    public static String[] getSQLInfo() {
+        return new String[]{
+                    sqlHost,
+                    sqlPort,
+                    sqlUser,
+                    sqlPass,
+                    sqlDB
+                };
+    }
+
+    public static boolean useSQL() {
+        return sqlEnable;
     }
 }
