@@ -21,3 +21,11 @@ fake-online: true
 startup:
   whitelist: false
 version: 2.0.4
+encryption: md5
+mysql:
+  enable: false
+  host: localhost
+  port: 3666
+  user: root
+  pass: password
+  db: database
