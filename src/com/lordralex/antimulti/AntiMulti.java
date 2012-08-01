@@ -10,13 +10,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.logging.Level;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @version 1.2
- * @author Joshua
+ * @version 2.0.5
+ * @author Lord_Ralex
  * @since 1.0
  */
 public class AntiMulti extends JavaPlugin {
@@ -28,28 +27,27 @@ public class AntiMulti extends JavaPlugin {
     @Override
     public void onLoad() {
         String currentVersion = this.getDescription().getVersion();
+        AMLogger.setup(this);
         AMLogger.info("Loading AntiMulti " + currentVersion);
         try {
             update = new updateThread(currentVersion);
             update.start();
         } catch (Exception ex) {
-            AMLogger.warning("[AM] Could not check for an update");
+            AMLogger.warning("Could not check for an update");
         }
     }
 
     @Override
     public void onEnable() {
         try {
-            AMLogger.info("Enabling AntiMulti");
             Configuration.loadConfig(this);
-            //manager = new DataManager(this);
+            manager = new DataManager();
             pListener = new PlayerListener(this);
             Bukkit.getPluginManager().registerEvents(pListener, this);
             CommandManager.setup(this);
             if (Configuration.fakeOnline() && !Bukkit.getOnlineMode()) {
                 AMLogger.info("USING FAKE ONLINE MODE");
             }
-            AMLogger.info("[AM] " + this.getName() + "-" + this.getVersion() + " successfully enabled");
             if (!update.isAlive()) {
                 String[] updateMessage = update.getUpdate();
                 if (updateMessage != null && updateMessage[0] != null) {
@@ -62,8 +60,9 @@ public class AntiMulti extends JavaPlugin {
                     }
                 }
             }
+            AMLogger.info(this.getName() + "-" + this.getVersion() + " successfully enabled");
         } catch (Throwable ex) {
-            AMLogger.error(ex, "[AM] An error occurred on startup, disabling " + this.getName());
+            AMLogger.error(ex, "An error occurred on startup, disabling " + this.getName());
             Bukkit.getPluginManager().disablePlugin(this);
         }
     }
@@ -75,8 +74,7 @@ public class AntiMulti extends JavaPlugin {
         } catch (Exception e) {
             AMLogger.error(e);
         }
-        AMLogger.close();
-        this.getLogger().info("Disabled " + getVersion());
+        AMLogger.info("Disabled " + getVersion());
     }
 
     public File getUserFolder() {
@@ -91,8 +89,7 @@ public class AntiMulti extends JavaPlugin {
         return false;
     }
 
-    public DataManager getManager()
-    {
+    public DataManager getManager() {
         return manager;
     }
 
@@ -117,15 +114,15 @@ public class AntiMulti extends JavaPlugin {
                     line = in.readLine();
                 }
                 if (!line.equalsIgnoreCase(currentVersion)) {
-                    update[0] = "[AM] Current version: " + currentVersion;
-                    update[1] = "[AM] An update is available: " + line;
+                    update[0] = "Current version: " + currentVersion;
+                    update[1] = "An update is available: " + line;
                 }
                 if ((line = in.readLine()) != null) {
-                    update[2] = "[AM] Update priority: " + line;
+                    update[2] = "Update priority: " + line;
                 }
                 in.close();
             } catch (IOException e) {
-                update[0] = "[AM] Could not check for an update";
+                update[0] = "Could not check for an update";
             } catch (Exception e) {
                 update[0] = "Error occured while checking for an update";
             }

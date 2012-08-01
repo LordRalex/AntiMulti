@@ -12,26 +12,22 @@ public enum Encryption {
 
     MD5("md5"),
     WHIRLPOOL("whirlpool");
-
     private String name;
 
-    private Encryption(String aName)
-    {
+    private Encryption(String aName) {
         name = aName;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
-    public static Encryption getEncryption(String test)
-    {
+    public static Encryption getEncryption(String test) {
         Encryption[] enc = Encryption.values();
-        for(Encryption e: enc)
-        {
-            if(e.getName().equalsIgnoreCase(test))
+        for (Encryption e : enc) {
+            if (e.getName().equalsIgnoreCase(test)) {
                 return e;
+            }
         }
         return Encryption.MD5;
     }

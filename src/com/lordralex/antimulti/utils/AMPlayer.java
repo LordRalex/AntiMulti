@@ -3,12 +3,10 @@ package com.lordralex.antimulti.utils;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.encryption.AlgorithmException;
 import com.lordralex.antimulti.encryption.Encrypt;
-import com.lordralex.antimulti.logger.AMLogger;
-import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 /**
@@ -35,22 +33,7 @@ public class AMPlayer {
     public AMPlayer(Player player) {
         name = player.getName();
         loginLoc = player.getLocation();
-        File passwordFile = new File(Configuration.getPlugin().getUserFolder(), "passwords");
-        if (!passwordFile.exists()) {
-            passwordFile.mkdirs();
-        }
-        passwordFile = new File(passwordFile, name + ".yml");
-        FileConfiguration passwordConfig = YamlConfiguration.loadConfiguration(passwordFile);
-        try {
-            password = passwordConfig.getString("password", Encrypt.encrypt("None"));
-            passwordConfig.set("password", password);
-            passwordConfig.save(passwordFile);
-        } catch (AlgorithmException e) {
-            AMLogger.error(e);
-            password = "3arubvgemfch9t99l4m43gudqk";
-        } catch (IOException e) {
-            AMLogger.error(e);
-        }
+        password = Configuration.getPlugin().getManager().getPassword(name);
     }
 
     /**
@@ -147,25 +130,15 @@ public class AMPlayer {
         if (!checkPW(oldPW)) {
             return false;
         }
-        String temp = password;
         try {
             password = Encrypt.encrypt(newPW);
-            FileConfiguration playerData = YamlConfiguration.loadConfiguration(
-                    new File(Configuration.getPlugin().getUserFolder(), "passwords" + File.separator + name + ".yml"));
-            playerData.set("password", password);
-            playerData.save(new File(Configuration.getPlugin().getUserFolder(), "passwords" + File.separator + name + ".yml"));
+            Configuration.getPlugin().getManager().setPassword(name, password);
             return true;
         } catch (IOException ex) {
-            AMLogger.error(ex);
-            password = temp;
+            Logger.getLogger(AMPlayer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         } catch (AlgorithmException ex) {
-            AMLogger.error(ex);
-            password = temp;
-            return false;
-        } catch (Exception ex) {
-            AMLogger.error(ex);
-            password = temp;
+            Logger.getLogger(AMPlayer.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
     }

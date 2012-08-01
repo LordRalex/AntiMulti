@@ -35,13 +35,10 @@ public class Encrypt {
         }
     }
 
-    public static void setEncryption(Encryption newVersion)
-    {
-
+    public static void setEncryption(Encryption newVersion) {
     }
 
-    public static Encryption getEncryption()
-    {
+    public static Encryption getEncryption() {
         return code;
     }
 
