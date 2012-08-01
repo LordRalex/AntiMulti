@@ -173,6 +173,7 @@ public class PlayerListener implements Listener {
             event.disallow(Result.KICK_OTHER, Configuration.getMaxNameMessage());
             return false;
         }
+        plugin.getManager().addName(ip, name);
         return true;
     }
 
