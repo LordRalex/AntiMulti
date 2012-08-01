@@ -4,13 +4,9 @@ import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.utils.IPHandler;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -167,72 +163,34 @@ public class PlayerListener implements Listener {
     private boolean checkIpToName(PlayerLoginEvent event) {
         String name = event.getPlayer().getName().toLowerCase();
         String ip = event.getAddress().getHostAddress();
-        FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), ip + ".yml"));
-        List<String> names = playerData.getStringList("names");
-        if (names == null) {
-            names = new ArrayList<String>();
-        }
-        for (int i = 0; i < names.size(); i++) {
-            names.add(i, names.remove(i).toLowerCase());
-        }
+        List<String> names = Arrays.asList(plugin.getManager().getNames(ip));
         if (names.isEmpty()) {
-            names.add(name);
         } else if (names.contains(name)) {
             return true;
         } else if (names.size() < maxNamesAdmin && checkPerm(event.getPlayer(), "antimulti.admin")) {
-            names.add(name);
         } else if (names.size() < maxNames) {
-            names.add(name);
         } else {
             event.disallow(Result.KICK_OTHER, Configuration.getMaxNameMessage());
             return false;
         }
-        playerData.set("names", names);
-        try {
-            playerData.save(new File(plugin.getUserFolder(), ip + ".yml"));
-            return true;
-        } catch (IOException ex) {
-            AMLogger.severe("ERROR SAVING PLAYER DATA FOLDER");
-            AMLogger.severe("PLAYER: " + name);
-            AMLogger.severe("IP: " + ip);
-            AMLogger.writeToFile(ex);
-            event.disallow(Result.KICK_OTHER, "Error trying to handle you");
-            return false;
-        }
+        return true;
     }
 
     private boolean checkNameToIp(PlayerLoginEvent event) {
-        String name = event.getPlayer().getName();
+        String name = event.getPlayer().getName().toLowerCase();
         String ip = event.getAddress().getHostAddress();
-        FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), name + ".yml"));
-        List<String> ips = playerData.getStringList("ips");
-        if (ips == null) {
-            ips = new ArrayList<String>();
-        }
+        List<String> ips = Arrays.asList(plugin.getManager().getIPs(name));
         if (ips.isEmpty()) {
-            ips.add(ip);
         } else if (IPHandler.contains(ips, ip)) {
             return true;
         } else if (ips.size() < maxAdminIPs && checkPerm(event.getPlayer(), "antimulti.admin")) {
-            ips.add(ip);
         } else if (ips.size() < maxIPs) {
-            ips.add(ip);
         } else {
             event.disallow(Result.KICK_OTHER, Configuration.getMaxIPMessage());
             return false;
         }
-        playerData.set("ips", ips);
-        try {
-            playerData.save(new File(plugin.getUserFolder(), name + ".yml"));
-            return true;
-        } catch (IOException ex) {
-            AMLogger.severe("ERROR SAVING PLAYER DATA FOLDER");
-            AMLogger.severe("PLAYER: " + name);
-            AMLogger.severe("IP" + ip);
-            AMLogger.writeToFile(ex);
-            event.disallow(Result.KICK_OTHER, "Error trying to handle you");
-            return false;
-        }
+        plugin.getManager().addIP(name, ip);
+        return true;
     }
 
     /**

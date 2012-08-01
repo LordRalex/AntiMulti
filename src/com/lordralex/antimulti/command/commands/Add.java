@@ -1,18 +1,12 @@
 package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.command.CommandManager;
-import com.lordralex.antimulti.logger.AMLogger;
-import java.io.File;
-import java.io.IOException;
+import com.lordralex.antimulti.config.Configuration;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
  * @version 1.0
@@ -34,25 +28,8 @@ public class Add extends CommandManager {
             sender.sendMessage(ChatColor.RED + args[1] + " is not a valid IP");
             return true;
         }
-        FileConfiguration playerConfig = YamlConfiguration.loadConfiguration(new File(plugin.getUserFolder(), args[0] + ".yml"));
-        List<String> currentIPs = playerConfig.getStringList("ips");
-        if (currentIPs == null) {
-            currentIPs = new ArrayList<String>();
-        }
-        if (currentIPs.isEmpty()) {
-            currentIPs.add(args[1]);
-        }
-        if (!currentIPs.contains(args[1])) {
-            currentIPs.add(args[1]);
-        }
-        playerConfig.set("ips", currentIPs);
-        try {
-            playerConfig.save(new File(plugin.getUserFolder(), args[0] + ".yml"));
-        } catch (IOException ex) {
-            sender.sendMessage(ChatColor.RED + "ERROR SAVING FILE");
-            AMLogger.error(ex, "Error saving player " + args[0] + " to IP " + args[1]);
-            return true;
-        }
+        Configuration.getPlugin().getManager().addName(args[1], args[0]);
+        Configuration.getPlugin().getManager().addIP(args[0], args[1]);
         sender.sendMessage(ChatColor.GREEN + args[1] + " was added to " + args[0]);
         return true;
     }
