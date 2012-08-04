@@ -281,7 +281,7 @@ public class LoginSystem extends CommandManager implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerChat(PlayerChatEvent event) {
+    public void onPlayerChat(AsyncPlayerChatEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
             if (players.contains(player)) {
@@ -310,7 +310,6 @@ public class LoginSystem extends CommandManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
-
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
             if (players.contains(player)) {
