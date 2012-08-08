@@ -1,5 +1,6 @@
 package com.lordralex.antimulti.utils;
 
+import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.encryption.AlgorithmException;
 import com.lordralex.antimulti.encryption.Encrypt;
@@ -20,7 +21,7 @@ import org.bukkit.entity.Player;
  */
 public class AMPlayer {
 
-    private String name;
+    private final String name;
     private String password;
     private boolean loggedIn;
     private Location loginLoc;
@@ -31,9 +32,10 @@ public class AMPlayer {
      * @param player
      */
     public AMPlayer(Player player) {
-        name = player.getName();
+        name = player.getName().toLowerCase();
         loginLoc = player.getLocation();
-        password = Configuration.getPlugin().getManager().getPassword(name);
+        password = AntiMulti.getPlugin().getManager().getPassword(name);
+        loggedIn = false;
     }
 
     /**
@@ -56,16 +58,6 @@ public class AMPlayer {
      */
     public Location getLoginLocation() {
         return loginLoc;
-    }
-
-    /**
-     * Sets the location of the login. Used to patch the login/join issue where
-     * players are defined to be located at spawn during Login when the AMPlayer
-     * is defined. This is the patch to that issue
-     *
-     * @param loc The new location to set
-     */
-    public void setLoginLocation(Location loc) {
     }
 
     /**
@@ -155,5 +147,9 @@ public class AMPlayer {
         } catch (AlgorithmException ex) {
             return true;
         }
+    }
+
+    public void setLoginLocation(Location location) {
+        loginLoc = location;
     }
 }

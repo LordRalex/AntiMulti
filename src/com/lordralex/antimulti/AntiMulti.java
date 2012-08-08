@@ -23,12 +23,13 @@ public class AntiMulti extends JavaPlugin {
     public static PlayerListener pListener;
     updateThread update = null;
     DataManager manager;
+    private static AntiMulti instance;
 
     @Override
     public void onLoad() {
+        instance = this;
         String currentVersion = this.getDescription().getVersion();
         AMLogger.setup(this);
-        AMLogger.info("Loading AntiMulti " + currentVersion);
         try {
             update = new updateThread(currentVersion);
             update.start();
@@ -91,6 +92,10 @@ public class AntiMulti extends JavaPlugin {
 
     public DataManager getManager() {
         return manager;
+    }
+
+    public static AntiMulti getPlugin() {
+        return instance;
     }
 
     private class updateThread extends Thread {

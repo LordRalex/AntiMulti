@@ -47,7 +47,7 @@ public class PlayerListener implements Listener {
             if (connectionRate < 1) {
                 throw new IndexOutOfBoundsException("Connection rate too low");
             }
-        } catch (Exception e) {
+        } catch (IndexOutOfBoundsException e) {
             AMLogger.warning("Error with the connection rate, defaulting");
             connectionRate = 20 / 4;
         }

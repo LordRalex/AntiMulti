@@ -32,7 +32,7 @@ public class FlatFileManager implements Manager {
     public String getPassword(String name) {
         File temp = new File(passFolder, name + ".yml");
         FileConfiguration user = YamlConfiguration.loadConfiguration(temp);
-        String password = user.getString("password", "");
+        String password = user.getString("password", "None");
         return password;
     }
 
@@ -48,6 +48,7 @@ public class FlatFileManager implements Manager {
     public void close() {
     }
 
+    @Override
     public String[] getIPs(String name) {
         List<String> ips = YamlConfiguration.loadConfiguration(new File(nameFolder, name + ".yml")).getStringList("ips");
         if (ips == null) {
@@ -56,6 +57,7 @@ public class FlatFileManager implements Manager {
         return ips.toArray(new String[0]);
     }
 
+    @Override
     public String[] getNames(String ip) {
         List<String> names = YamlConfiguration.loadConfiguration(new File(nameFolder, ip + ".yml")).getStringList("names");
         if (names == null) {
@@ -64,6 +66,7 @@ public class FlatFileManager implements Manager {
         return names.toArray(new String[0]);
     }
 
+    @Override
     public void addIP(String name, String ip) {
         String[] ips = getIPs(name);
         List<String> newIPs = Arrays.asList(ips);
@@ -73,6 +76,7 @@ public class FlatFileManager implements Manager {
         YamlConfiguration.loadConfiguration(new File(ipFolder, name + ".yml")).set("ips", newIPs);
     }
 
+    @Override
     public void addName(String ip, String name) {
         String[] names = getNames(ip);
         List<String> newNames = Arrays.asList(names);

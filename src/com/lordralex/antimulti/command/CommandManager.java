@@ -37,8 +37,7 @@ public abstract class CommandManager implements CommandExecutor {
     public abstract void disable();
 
     /**
-     * Checks to see if a CommandSender has a permission. This checks to see if
-     * Vault was enabled, but will use SuperPerms if not. If the sender is a
+     * Checks to see if a CommandSender has a permission. If the sender is a
      * ConsoleCommandSender, then this returns true.
      *
      * @param sender Sender to check permission
@@ -53,8 +52,7 @@ public abstract class CommandManager implements CommandExecutor {
     }
 
     /**
-     * Checks to see if a player has a permission. This checks to see if Vault
-     * was enabled, but will use SuperPerms if not.
+     * Checks to see if a player has a permission..
      *
      * @param player Player to check permission
      * @param permission Permission to check

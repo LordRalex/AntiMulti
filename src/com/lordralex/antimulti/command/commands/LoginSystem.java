@@ -3,7 +3,8 @@ package com.lordralex.antimulti.command.commands;
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.utils.AMPlayer;
-import com.lordralex.antimulti.utils.PlayerList;
+import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -18,14 +19,13 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
 
 /**
- *
- * @version 1.0
+ * @version 1.1
  * @author icelord871
  * @since 1.2
  */
 public class LoginSystem extends CommandManager implements Listener {
 
-    PlayerList<AMPlayer> players = new PlayerList<AMPlayer>();
+    private final Map<String, AMPlayer> players = new HashMap<String, AMPlayer>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -40,12 +40,17 @@ public class LoginSystem extends CommandManager implements Listener {
             }
             AMPlayer user = findPlayer(sender.getName());
             if (user == null || user.isLoggedIn()) {
+                if (user == null) {
+                    System.out.println("No one found");
+                } else {
+                    System.out.println("Logged in already");
+                }
                 sender.sendMessage(ChatColor.RED + "You do not have a reason to log in");
                 return true;
             }
             if (user.logIn(args[0])) {
                 sender.sendMessage(ChatColor.GREEN + "You have logged in");
-                players.remove(user);
+                players.remove(sender.getName().toLowerCase());
             } else {
                 sender.sendMessage(ChatColor.RED + "Incorrect password");
             }
@@ -104,20 +109,20 @@ public class LoginSystem extends CommandManager implements Listener {
     }
 
     private AMPlayer findPlayer(String name) {
-        return players.get(name);
+        return players.get(name.toLowerCase());
     }
 
     private AMPlayer findPlayer(Player player) {
-        return players.get(player.getName());
+        return players.get(player.getName().toLowerCase());
     }
 
     @Override
     public void reload() {
         for (int i = 0; i < players.size(); i++) {
-            AMPlayer player = players.get(i);
-            if (player.isLoggedIn()) {
-                players.remove(i);
-                i--;
+            for (String key : players.keySet()) {
+                if (players.get(key).isLoggedIn()) {
+                    players.remove(key);
+                }
             }
         }
     }
@@ -132,7 +137,7 @@ public class LoginSystem extends CommandManager implements Listener {
         int maxMoveDistance = Configuration.getMoveBuffer();
         AMPlayer amplayer = findPlayer(event.getPlayer());
         if (amplayer == null || amplayer.isLoggedIn()) {
-            players.remove(amplayer);
+            players.remove(event.getPlayer().getName().toLowerCase());
             return;
         }
         Location login = amplayer.getLoginLocation();
@@ -162,7 +167,7 @@ public class LoginSystem extends CommandManager implements Listener {
         } else if (!requireLogin(event.getPlayer(), amplayer)) {
             amplayer.logIn();
         } else {
-            players.add(amplayer);
+            players.put(event.getPlayer().getName().toLowerCase(), amplayer);
         }
     }
 
@@ -170,7 +175,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onPlayerLeave(PlayerKickEvent event) {
         AMPlayer amplayer = findPlayer(event.getPlayer());
         if (amplayer == null || amplayer.isLoggedIn()) {
-            players.remove(amplayer);
+            players.remove(event.getPlayer().getName().toLowerCase());
             return;
         }
         if (!amplayer.isLoggedIn()) {
@@ -182,7 +187,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onPlayerLeave(PlayerQuitEvent event) {
         AMPlayer amplayer = findPlayer(event.getPlayer());
         if (amplayer == null || amplayer.isLoggedIn()) {
-            players.remove(amplayer);
+            players.remove(event.getPlayer().getName().toLowerCase());
             return;
         }
         if (!amplayer.isLoggedIn()) {
@@ -195,7 +200,7 @@ public class LoginSystem extends CommandManager implements Listener {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
             if (player != null) {
-                players.remove(player);
+                players.remove(event.getPlayer().getName().toLowerCase());
             }
             return;
         }
@@ -212,10 +217,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -226,10 +228,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onBlockPlace(BlockPlaceEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -241,10 +240,7 @@ public class LoginSystem extends CommandManager implements Listener {
         if (event.getPlayer() instanceof Player) {
             AMPlayer player = findPlayer((Player) event.getPlayer());
             if (player == null || player.isLoggedIn()) {
-                if (players.contains(player)) {
-                    int index = players.find(player);
-                    players.remove(index);
-                }
+                players.remove(event.getPlayer().getName().toLowerCase());
             } else {
                 event.setCancelled(true);
                 ((Player) event.getPlayer()).sendMessage(ChatColor.RED + "Please login or register first");
@@ -256,10 +252,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onBedEnter(PlayerBedEnterEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -270,10 +263,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onBucketFill(PlayerBucketFillEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -282,15 +272,14 @@ public class LoginSystem extends CommandManager implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        AMPlayer player = findPlayer(event.getPlayer());
-        if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
+        synchronized (players) {
+            AMPlayer player = findPlayer(event.getPlayer());
+            if (player == null || player.isLoggedIn()) {
+                players.remove(event.getPlayer().getName().toLowerCase());
+            } else {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
             }
-        } else {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
         }
     }
 
@@ -298,10 +287,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -312,11 +298,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onCommandPreprocess(PlayerCommandPreprocessEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-                return;
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         }
         String cmd = event.getMessage();
         if (!cmd.startsWith("/login") && !cmd.startsWith("/register")) {
@@ -329,10 +311,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onPlayerDrop(PlayerDropItemEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -343,10 +322,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onPlayerPickup(PlayerPickupItemEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
@@ -357,10 +333,7 @@ public class LoginSystem extends CommandManager implements Listener {
     public void onPlayerFish(PlayerFishEvent event) {
         AMPlayer player = findPlayer(event.getPlayer());
         if (player == null || player.isLoggedIn()) {
-            if (players.contains(player)) {
-                int index = players.find(player);
-                players.remove(index);
-            }
+            players.remove(event.getPlayer().getName().toLowerCase());
         } else {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.RED + "Please login or register first");
