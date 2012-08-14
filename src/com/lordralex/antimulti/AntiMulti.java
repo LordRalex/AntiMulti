@@ -100,40 +100,34 @@ public class AntiMulti extends JavaPlugin {
 
     private class updateThread extends Thread {
 
-        String currentVersion;
-        URL versionOnline;
-        String[] update = new String[3];
+        private String cv; //Current Version
+        private String update = "";
 
-        public updateThread(String version) throws Exception {
-            versionOnline = new URL("https://raw.github.com/LordRalex/AntiMulti/master/version.txt");
-            currentVersion = version;
-            update[0] = update[1] = update[2] = null;
+        public updateThread(String version) {
+            cv = version;
         }
 
         @Override
         public void run() {
             String line = null;
             try {
-                BufferedReader in = new BufferedReader(new InputStreamReader(versionOnline.openStream()));
-                while (line == null || line.equalsIgnoreCase("")) {
-                    line = in.readLine();
-                }
-                if (!line.equalsIgnoreCase(currentVersion)) {
-                    update[0] = "Current version: " + currentVersion;
-                    update[1] = "An update is available: " + line;
-                }
-                if ((line = in.readLine()) != null) {
-                    update[2] = "Update priority: " + line;
-                }
+                String url = "https://raw.github.com/LordRalex/AntiMulti/master/version.txt";
+                //You should change the verison to to something like this
+                //newVersion,priority
+                BufferedReader in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+                while ((line = in.readLine()) != null) {
+                     if (!line.equalsIgnoreCase(cv)) {
+                        String[] nv = line.split(",");
+                        update = "Update available: " + nv[0] + " (Your Version " + cv + "), Priority " + nv[1];
+                    }
+                }               
                 in.close();
-            } catch (IOException e) {
-                update[0] = "Could not check for an update";
             } catch (Exception e) {
-                update[0] = "Error occured while checking for an update";
+                update = "Failed to get update.";
             }
         }
 
-        public String[] getUpdate() {
+        public String getUpdate() {
             return update;
         }
     }
