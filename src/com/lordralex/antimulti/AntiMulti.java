@@ -50,15 +50,9 @@ public class AntiMulti extends JavaPlugin {
                 AMLogger.info("USING FAKE ONLINE MODE");
             }
             if (!update.isAlive()) {
-                String[] updateMessage = update.getUpdate();
-                if (updateMessage != null && updateMessage[0] != null) {
-                    AMLogger.info(updateMessage[0]);
-                    if (updateMessage[1] != null) {
-                        AMLogger.info(updateMessage[1]);
-                    }
-                    if (updateMessage[2] != null) {
-                        AMLogger.info(updateMessage[2]);
-                    }
+                String updateMessage = update.getUpdate();
+                if (updateMessage != null && !updateMessage.isEmpty()) {
+                    AMLogger.info(updateMessage);
                 }
             }
             AMLogger.info(this.getName() + "-" + this.getVersion() + " successfully enabled");
@@ -112,15 +106,16 @@ public class AntiMulti extends JavaPlugin {
             String line = null;
             try {
                 String url = "https://raw.github.com/LordRalex/AntiMulti/master/version.txt";
-                //You should change the verison to to something like this
-                //newVersion,priority
                 BufferedReader in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
-                while ((line = in.readLine()) != null) {
-                     if (!line.equalsIgnoreCase(cv)) {
-                        String[] nv = line.split(",");
+                line = in.readLine();
+                if (line != null) {
+                    String[] nv = line.split(",");
+                    if (cv.equalsIgnoreCase(nv[0])) {
+                        update = "";
+                    } else {
                         update = "Update available: " + nv[0] + " (Your Version " + cv + "), Priority " + nv[1];
                     }
-                }               
+                }
                 in.close();
             } catch (Exception e) {
                 update = "Failed to get update.";
