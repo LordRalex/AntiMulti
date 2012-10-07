@@ -1,8 +1,6 @@
 package com.lordralex.antimulti.config;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.encryption.Encrypt;
-import com.lordralex.antimulti.encryption.Encryption;
 import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.utils.Formatter;
 import java.io.File;
@@ -30,9 +28,6 @@ public class Configuration {
     private static boolean fakeOnline = true;
     private static boolean startWhitelist = false;
     private static boolean overrideVanillaWL = true;
-    private static boolean loginUse = false;
-    private static boolean playerLogin = false;
-    private static boolean adminLogin = true;
     private static int moveBuffer = 5;
     private static String sqlHost = "localhost";
     private static String sqlPort = "3306";
@@ -69,21 +64,16 @@ public class Configuration {
         maxIPsUsed = config.getString("messages.max.ip", maxIPsUsed);
         maxNamesUsed = config.getString("messages.max.name", maxNamesUsed);
         useIPProt = config.getBoolean("protection.ip", useIPProt);
-        loginUse = config.getBoolean("protection.password", loginUse);
-        playerLogin = config.getBoolean("require-login.player", playerLogin);
-        adminLogin = config.getBoolean("require-login.admin", adminLogin);
         fakeOnline = config.getBoolean("fake-online", fakeOnline);
         startWhitelist = config.getBoolean("start.whitelist", startWhitelist);
         overrideVanillaWL = config.getBoolean("whitelist.override-vanilla", overrideVanillaWL);
         moveBuffer = config.getInt("move-buffer", moveBuffer);
-        String encrypt = config.getString("encryption", Encryption.MD5.getName());
         sqlEnable = config.getBoolean("mysql.enable", sqlEnable);
         sqlHost = config.getString("mysql.host", sqlHost);
         sqlPort = config.getString("mysql.port", sqlPort);
         sqlUser = config.getString("mysql.user", sqlUser);
         sqlPass = config.getString("mysql.pass", sqlPass);
         sqlDB = config.getString("mysql.db", sqlDB);
-        Encrypt.setEncryption(Encryption.getEncryption(encrypt));
 
         config.set("limits.member.IP", playerIPLimit);
         config.set("limits.member.name", playerNameLimit);
@@ -94,14 +84,10 @@ public class Configuration {
         config.set("messages.max.ip", maxIPsUsed);
         config.set("messages.max.name", maxNamesUsed);
         config.set("protection.ip", useIPProt);
-        config.set("protection.password", loginUse);
-        config.set("require-login.player", playerLogin);
-        config.set("require-login.admin", adminLogin);
         config.set("fake-online", fakeOnline);
         config.set("start.whitelist", startWhitelist);
         config.set("whitelist.override-vanilla", overrideVanillaWL);
         config.set("move-buffer", moveBuffer);
-        config.set("encryption", Encrypt.getEncryption().getName());
         config.set("mysql.enable", sqlEnable);
         config.set("mysql.host", sqlHost);
         config.set("mysql.port", sqlPort);
@@ -117,9 +103,6 @@ public class Configuration {
 
         if (fakeOnline && !Bukkit.getOnlineMode()) {
             useIPProt = true;
-            loginUse = true;
-            playerLogin = true;
-            adminLogin = true;
         }
         whitelistMessage = Formatter.handleColorCodes(whitelistMessage);
         maxIPsUsed = Formatter.handleColorCodes(maxIPsUsed);
@@ -206,18 +189,6 @@ public class Configuration {
         return plugin;
     }
 
-    public static boolean useLoginProtection() {
-        return loginUse;
-    }
-
-    public static boolean requirePlayerLogin() {
-        return playerLogin;
-    }
-
-    public static boolean requireAdminLogin() {
-        return adminLogin;
-    }
-
     public static int getMoveBuffer() {
         return moveBuffer;
     }
@@ -238,5 +209,8 @@ public class Configuration {
 
     public static boolean useSQL() {
         return sqlEnable;
+    }
+
+    private Configuration() {
     }
 }

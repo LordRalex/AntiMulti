@@ -5,7 +5,7 @@
 package com.lordralex.antimulti.encryption;
 
 /**
- *
+ * @deprecated No replacement
  * @author Joshua
  */
 public enum Encryption {

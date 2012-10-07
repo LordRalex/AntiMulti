@@ -1,6 +1,7 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.logger.AMLogger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class FlatFileManager implements Manager {
     public Manager setup() {
         passFolder = new File(Configuration.getPlugin().getUserFolder(), "passwords");
         ipFolder = new File(Configuration.getPlugin().getUserFolder(), "ips");
-        ipFolder = new File(Configuration.getPlugin().getUserFolder(), "names");
+        nameFolder = new File(Configuration.getPlugin().getUserFolder(), "names");
         return this;
     }
 
@@ -85,7 +86,7 @@ public class FlatFileManager implements Manager {
         try {
             temp.save(new File(ipFolder, name + ".yml"));
         } catch (IOException ex) {
-            Logger.getLogger(FlatFileManager.class.getName()).log(Level.SEVERE, null, ex);
+            AMLogger.error(ex);
         }
     }
 
@@ -101,7 +102,7 @@ public class FlatFileManager implements Manager {
         try {
             temp.save(new File(nameFolder, ip + ".yml"));
         } catch (IOException ex) {
-            Logger.getLogger(FlatFileManager.class.getName()).log(Level.SEVERE, null, ex);
+            AMLogger.error(ex);
         }
     }
 }

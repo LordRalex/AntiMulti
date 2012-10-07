@@ -9,6 +9,7 @@ import java.util.Arrays;
  * @version 1.0
  * @author Joshua
  * @since 1.2
+ * @deprecated No replacement
  */
 public class Encrypt {
 

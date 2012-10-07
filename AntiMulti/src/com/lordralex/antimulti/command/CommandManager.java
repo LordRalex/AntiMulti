@@ -2,19 +2,15 @@ package com.lordralex.antimulti.command;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.command.commands.Add;
-import com.lordralex.antimulti.command.commands.LoginSystem;
 import com.lordralex.antimulti.command.commands.Reload;
 import com.lordralex.antimulti.command.commands.Whitelist;
-import com.lordralex.antimulti.logger.AMLogger;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Listener;
 
 /**
  * @version 1.1

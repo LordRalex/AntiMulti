@@ -2,7 +2,7 @@ package com.lordralex.antimultilogin.listeners;
 
 import com.lordralex.antimulti.command.CommandManager;
 import com.lordralex.antimulti.config.Configuration;
-import com.lordralex.antimulti.utils.AMPlayer;
+import com.lordralex.antimultilogin.utils.AMPlayer;
 import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.ChatColor;

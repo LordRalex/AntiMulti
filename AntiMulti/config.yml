@@ -13,14 +13,9 @@ messages:
     name: 'Too many names used'
 protection:
   ip: true
-  password: false
-require-login:
-  player: false
-  admin: true
-fake-online: true
 startup:
   whitelist: false
-version: 2.0.4
+version: 2.0.6
 encryption: md5
 mysql:
   enable: false

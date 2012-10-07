@@ -1,6 +1,6 @@
 name: AntiMulti
 main: com.lordralex.antimulti.AntiMulti
-version: 2.0.5.1
+version: 2.0.6
 website: http://dev.bukkit.org/server-mods/antimulti
 dev-url: http://www.minecraftforum.net/user/731553-lord-ralex/
 authors:
@@ -18,14 +18,6 @@ commands:
     usage: "/<command> <name> <ip>"
     description: "Add an IP to someone's name"
     permission: "antimulti.cmd.add"
-  login:
-    usage: "/<command> <password>"
-    description: "Log in to your account"
-    permission: "antimulti.cmd.login"
-  register:
-    usage: "/<command> <password> <password>"
-    description: "Register your account with a password"
-    permission: "antimulti.cmd.register"
   amreload:
     usage: "/<command>"
     description: "Reloads AntiMulti"
@@ -44,8 +36,6 @@ permissions:
     children:
       antimulti.cmd.whitelist: true
       antimulti.cmd.add: true
-      antimulti.cmd.login: true
-      antimulti.cmd.register: true
       antimulti.cmd.reload: true
   antimulti.whitelist.*:
     default: false
@@ -65,12 +55,6 @@ permissions:
   antimulti.cmd.add:
     default: false
     description: "Allows access to the add command"
-  antimulti.cmd.register:
-    default: true
-    description: "Allows access to the register command"
-  antimulti.cmd.login:
-    default: true
-    description: "Allows access to the login command"
   antimulti.cmd.reload:
     default: false
     description: "Allows access to the reload command"

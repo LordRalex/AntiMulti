@@ -4,6 +4,7 @@ package com.lordralex.antimulti.encryption;
  * @version 1.0
  * @author Joshua
  * @since 1.2
+ * @deprecated No replacement
  */
 public class AlgorithmException extends Exception {
 

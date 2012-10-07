@@ -7,10 +7,11 @@ import org.bukkit.entity.Player;
 /**
  * @version 1.0
  * @author Joshua
+ * @since 1.2
  */
-public class DataManager {
+public final class DataManager {
 
-    Manager manager;
+    private Manager manager;
 
     public DataManager() {
         if (Configuration.useSQL()) {

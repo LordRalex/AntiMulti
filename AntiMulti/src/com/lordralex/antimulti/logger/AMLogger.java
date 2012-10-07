@@ -82,4 +82,7 @@ public class AMLogger {
     public static void error(Throwable error) {
         error(error, null);
     }
+
+    private AMLogger() {
+    }
 }

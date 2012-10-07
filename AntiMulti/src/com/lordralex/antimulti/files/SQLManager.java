@@ -136,7 +136,7 @@ public class SQLManager implements Manager {
         for (int i = 0; i < ips.size(); i++) {
             ips.add(i, ips.remove(i).toLowerCase());
         }
-        if (ips.contains(ip)) {
+        if (ips.contains(ip.toLowerCase())) {
             return;
         }
         ips.add(ip.toLowerCase());
@@ -156,7 +156,7 @@ public class SQLManager implements Manager {
         for (int i = 0; i < names.size(); i++) {
             names.add(i, names.remove(i).toLowerCase());
         }
-        if (names.contains(name)) {
+        if (names.contains(name.toLowerCase())) {
             return;
         }
         names.add(name.toLowerCase());

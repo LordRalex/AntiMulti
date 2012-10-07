@@ -6,11 +6,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @version 1.0
- * @author Joshua
+ * Handles comparison of 2 IPs. This will allow checks using wildcards, but not
+ * ranges.
+ *
+ * @version 1.1
+ * @author Lord_Ralez
  * @since 1.2
  */
-public class IPHandler {
+public final class IPHandler {
 
     /**
      * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
@@ -20,6 +23,7 @@ public class IPHandler {
      * @param ip1 The first IP to check
      * @param ip2 The second IP to check
      * @return True if the ips are the same, false otherwise
+     * @since 1.0
      */
     public static boolean contains(String ip1, String ip2) {
         try {
@@ -67,6 +71,7 @@ public class IPHandler {
      * @param ip2 The second IP to check
      * @return True if the IPs are the same, false otherwise
      * @see contains(String, String)
+     * @since 1.0
      */
     public static boolean contains(InetAddress ip, InetAddress ip2) {
         return contains(ip.getHostAddress(), ip2.getHostAddress());
@@ -80,6 +85,7 @@ public class IPHandler {
      * @param list The list of IPs to check with
      * @param ip The ip to attempt to find
      * @return True if the list contains the IP, false otherwise
+     * @since 1.0
      */
     public static boolean contains(List<String> list, String ip) {
         for (String test : list) {
@@ -88,5 +94,8 @@ public class IPHandler {
             }
         }
         return false;
+    }
+
+    private IPHandler() {
     }
 }

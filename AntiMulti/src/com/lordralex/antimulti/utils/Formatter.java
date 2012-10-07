@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
  * used. This does not use any of the AntiMulti's features so this can be used
  * in any class without needing to hook into anything else
  *
- * @version 1.0
- * @author Joshua
+ * @version 1.1
+ * @author Lord_Ralex
  * @since 1.2
  */
-public class Formatter {
+public final class Formatter {
 
     private static Pattern chatColorPattern = Pattern.compile("(?i)&([0-9A-F])");
     private static Pattern chatMagicPattern = Pattern.compile("(?i)&([K])");
@@ -94,7 +94,7 @@ public class Formatter {
      * @param message The message to replace
      * @param tag The tag to replace, which is formatted as "{tag}"
      * @param var The variable to replace the tag with
-     * @return
+     * @return The message with the tag replaced
      */
     public static String replaceTag(String message, String tag, String var) {
         String newMessage = message;
@@ -121,5 +121,8 @@ public class Formatter {
      */
     public static String getTime() {
         return parseTime(System.currentTimeMillis());
+    }
+
+    private Formatter() {
     }
 }
