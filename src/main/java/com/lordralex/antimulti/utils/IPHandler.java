@@ -9,8 +9,8 @@ import java.util.List;
  * Handles comparison of 2 IPs. This will allow checks using wildcards, but not
  * ranges.
  *
- * @version 1.1
- * @author Lord_Ralez
+ * @version 3.0
+ * @author Lord_Ralex
  * @since 1.2
  */
 public final class IPHandler {

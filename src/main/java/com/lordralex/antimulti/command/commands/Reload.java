@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
- * @version 1.1
+ * @version 3.0
  * @author Lord_Ralex
  * @since 1.2
  */

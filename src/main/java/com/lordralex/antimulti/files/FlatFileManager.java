@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.io.File;
 import java.io.IOException;
@@ -12,8 +11,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * @version 1.0
- * @author Joshua
+ * @version 3.0
+ * @author Lord_Ralex
+ * @since 2.0.5
  */
 public class FlatFileManager implements Manager {
 

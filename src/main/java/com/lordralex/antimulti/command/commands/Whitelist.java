@@ -12,7 +12,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * @version 1.1
+ * @version 3.0
  * @since 1.1
  * @author Lord_Ralex
  */

@@ -15,8 +15,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 /**
- * @version 1.2
- * @author icelord871
+ * @version 3.0
+ * @author Lord_Ralex
  * @since 1.2
  */
 public class PlayerListener implements Listener {

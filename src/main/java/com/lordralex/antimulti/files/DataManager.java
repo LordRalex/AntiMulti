@@ -4,8 +4,8 @@ import com.lordralex.antimulti.config.Configuration;
 import org.bukkit.entity.Player;
 
 /**
- * @version 1.0
- * @author Joshua
+ * @version 3.0
+ * @author Lord_Ralex
  * @since 1.2
  */
 public final class DataManager {

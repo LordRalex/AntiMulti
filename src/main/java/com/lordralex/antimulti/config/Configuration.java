@@ -1,6 +1,5 @@
 package com.lordralex.antimulti.config;
 
-import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.io.File;
 import org.bukkit.Bukkit;
@@ -8,8 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @version 1.0
- * @author Joshua
+ * @version 3.0
+ * @author Lord_Ralex
  * @since 1.2
  */
 public class Configuration {

@@ -10,8 +10,9 @@ import java.util.Arrays;
 import lib.PatPeter.SQLibrary.MySQL;
 
 /**
- * @version 1.0
- * @author Joshua
+ * @version 3.0
+ * @author Lord_Ralex
+ * @since 2.0.5
  */
 public class SQLManager implements Manager {
 

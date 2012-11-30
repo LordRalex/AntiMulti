@@ -9,7 +9,7 @@ import org.bukkit.plugin.Plugin;
  * console and is accessable statically.
  *
  * @version 3.0
- * @author Joshua
+ * @author Lord_Ralex
  * @since 1.2
  */
 public class AMLogger {

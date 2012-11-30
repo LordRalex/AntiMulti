@@ -55,28 +55,57 @@ public class AntiMulti extends JavaPlugin {
         AMLogger.info(getTitle() + " is now disabled");
     }
 
+    /**
+     * Returns the folder used to store user data
+     *
+     * @return The File for the user folder
+     */
     public File getUserFolder() {
         return new File(getDataFolder(), "data");
     }
 
+    /**
+     * Returns the version of the plugin
+     *
+     * @return Version
+     */
     public String getVersion() {
-        return this.getDescription().getVersion();
+        return instance.getDescription().getVersion();
     }
 
+    /**
+     * Returns the DataManager that is being used to read and write data
+     *
+     * @return The DataManager in use
+     */
     public DataManager getManager() {
         return manager;
     }
 
+    /**
+     * Returns the instance of this plugin
+     *
+     * @return Instance of plugin
+     */
     public static AntiMulti getPlugin() {
         return instance;
     }
 
+    /**
+     * Returns a title for this plugin, formatted as "[Name]-[Version]"
+     *
+     * @return The title of this plugin
+     */
     public String getTitle() {
         return getName() + "-" + getVersion();
     }
-    
-    public PlayerListener getPlayerListener()
-    {
+
+    /**
+     * Returns the PlayerListener that is being used for this plugin
+     *
+     * @return The PlayerListener for this plugin
+     */
+    public PlayerListener getPlayerListener() {
         return pListener;
     }
 }

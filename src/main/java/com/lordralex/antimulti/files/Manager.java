@@ -1,7 +1,8 @@
 package com.lordralex.antimulti.files;
 
 /**
- * @version 1.0
+ * @version 3.0
+ * @author Lord_Ralex
  * @since 2.0.5
  */
 public interface Manager {
