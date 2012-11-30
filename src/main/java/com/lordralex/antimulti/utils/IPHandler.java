@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Handles comparison of 2 IPs. This will allow checks using wildcards, but not
- * ranges.
+ * Handles comparison of 2 IPs. This allows checks of IPs including ranges and
+ * wildcards.
  *
  * @version 3.0
  * @author Lord_Ralex
@@ -16,9 +16,8 @@ import java.util.List;
 public final class IPHandler {
 
     /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
-     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
-     * with 192.168.1.1-10
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
+     * and ranges (x-y)
      *
      * @param ip1 The first IP to check
      * @param ip2 The second IP to check
@@ -47,10 +46,27 @@ public final class IPHandler {
             for (int i = 0; i < 4; i++) {
                 String partA = ip1parts[i];
                 String partB = ip2parts[i];
+                if (partA.contains("-")) {
+                    try {
+                        int num1 = Integer.parseInt(partA.split("-")[0]);
+                        int num2 = Integer.parseInt(partA.split("-")[1]);
+                        int test = Integer.parseInt(partB);
+                        if (num1 <= test && test <= num2) {
+                        }
+                    } catch (NumberFormatException e) {
+                        return false;
+                    } catch (IndexOutOfBoundsException e) {
+                        return false;
+                    }
+                }
                 if (!partA.equalsIgnoreCase("*") && !partB.equalsIgnoreCase("*")) {
-                    int one = Integer.parseInt(partA);
-                    int two = Integer.parseInt(partB);
-                    if (one != two) {
+                    try {
+                        int one = Integer.parseInt(partA);
+                        int two = Integer.parseInt(partB);
+                        if (one != two) {
+                            return false;
+                        }
+                    } catch (NumberFormatException e) {
                         return false;
                     }
                 }
@@ -63,9 +79,8 @@ public final class IPHandler {
     }
 
     /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
-     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
-     * with 192.168.1.1-10
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
+     * and ranges (x-y)
      *
      * @param ip The first IP to check
      * @param ip2 The second IP to check
@@ -76,11 +91,10 @@ public final class IPHandler {
     public static boolean contains(InetAddress ip, InetAddress ip2) {
         return contains(ip.getHostAddress(), ip2.getHostAddress());
     }
-    
+
     /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
-     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
-     * with 192.168.1.1-10
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
+     * and ranges (x-y)
      *
      * @param ip The first IP to check
      * @param ip2 The second IP to check
@@ -91,11 +105,10 @@ public final class IPHandler {
     public static boolean contains(String ip, InetAddress ip2) {
         return contains(ip, ip2.getHostAddress());
     }
-    
+
     /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
-     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
-     * with 192.168.1.1-10
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
+     * and ranges (x-y)
      *
      * @param ip The first IP to check
      * @param ip2 The second IP to check
@@ -108,9 +121,8 @@ public final class IPHandler {
     }
 
     /**
-     * Checks a list to see if an ip is listed. This also checks for the
-     * wildcard (*), so for example, 192.168.1.4 will return true with
-     * 192.168.1.*, but not with 192.168.1.1-10
+     * Checks a list of IPs to see if one is in it. This also checks for the wildcard (*)
+     * and ranges (x-y)
      *
      * @param list The list of IPs to check with
      * @param ip The ip to attempt to find
