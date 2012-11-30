@@ -1,12 +1,10 @@
-name: AntiMulti
+name: ${project.name}
 main: com.lordralex.antimulti.AntiMulti
-version: 2.0.6
-website: http://dev.bukkit.org/server-mods/antimulti
+version: ${project.version}
+website: ${project.url}
 dev-url: http://www.minecraftforum.net/user/731553-lord-ralex/
-authors:
-  - "Lord_Ralex"
-database: false
-prefix: "AM"
+author: Lord_Ralex
+prefix: ${project.name}
 description: "The Anti-Alt Protection Plugin with some extra crap"
 commands:
   whitelist:
