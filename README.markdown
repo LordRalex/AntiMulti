@@ -1,5 +1,5 @@
-I am currently rewriting the code for the plugin, to attempt to fix any issues and to get it to a more stable point.
-Updated Nov. 30, 2012
+>I am currently rewriting the code for the plugin, to attempt to fix any issues and to get it to a more stable point.
+>Updated Nov. 30, 2012
 
 
 This is AntiMulti. It is a plugin designed to prevent the use of alternate accounts from the same IP address, while also to some extent function as a way to prevent cracked clients from using multiple names. To put it simply, a player cannot use multiple accounts on the same IP address and likewise, will not be able to use a ton of IPs.
