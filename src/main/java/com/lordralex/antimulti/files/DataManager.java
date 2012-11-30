@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.config.Configuration;
-import java.io.IOException;
 import org.bukkit.entity.Player;
 
 /**
@@ -20,34 +19,6 @@ public final class DataManager {
             manager = new FlatFileManager();
         }
         manager = manager.setup();
-    }
-
-    public String getPassword(String name) {
-        if (name == null) {
-            return null;
-        }
-        return manager.getPassword(name.toLowerCase().trim());
-    }
-
-    public String getPassword(Player player) {
-        if (player == null) {
-            return null;
-        }
-        return getPassword(player.getName());
-    }
-
-    public void setPassword(String name, String newPW) throws IOException {
-        if (name == null) {
-            return;
-        }
-        manager.setPassword(name.toLowerCase().trim(), newPW);
-    }
-
-    public void setPassword(Player player, String newPW) throws IOException {
-        if (player == null) {
-            return;
-        }
-        setPassword(player.getName(), newPW);
     }
 
     public String[] getIPs(String name) {

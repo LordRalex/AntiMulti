@@ -12,9 +12,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
+ * @version 1.1
  * @since 1.1
- * @author icelord871
- * @version 1.0
+ * @author Lord_Ralex
  */
 public class Whitelist extends CommandManager {
 
@@ -22,18 +22,16 @@ public class Whitelist extends CommandManager {
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
-            String status = "The AntiMulti Whitelist is currently ";
-            if (AntiMulti.pListener.getWhitelistStatus()) {
-                status += "on";
-            } else {
-                status += "off";
-            }
+            String status = "The AntiMulti Whitelist is currently "
+                    + (AntiMulti.getPlugin().getPlayerListener().getWhitelistStatus()
+                    ? "on"
+                    : "off");
             sender.sendMessage(ChatColor.GREEN + status);
             return true;
         }
         String newMode = args[0];
-        if (newMode.equalsIgnoreCase("1") || newMode.equalsIgnoreCase("on") || newMode.equalsIgnoreCase("enable")) {
-            AntiMulti.pListener.toggleWhitelist(true);
+        if (newMode.equalsIgnoreCase("on") || newMode.equalsIgnoreCase("enable")) {
+            AntiMulti.getPlugin().getPlayerListener().toggleWhitelist(true);
             sender.sendMessage(ChatColor.RED + "The AntiMulti Whitelist has been engaged");
             sender.sendMessage(ChatColor.RED + "Kicking unauthorized personnel");
             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -51,11 +49,11 @@ public class Whitelist extends CommandManager {
                 }
             }
             if (!(sender instanceof ConsoleCommandSender)) {
-                AMLogger.info("AntiMulti whitelist has been activated");
+                AMLogger.info("AntiMulti whitelist has been activated by " + sender.getName());
             }
             return true;
-        } else if (newMode.equalsIgnoreCase("0") || newMode.equalsIgnoreCase("off") || newMode.equalsIgnoreCase("disable")) {
-            AntiMulti.pListener.toggleWhitelist(false);
+        } else if (newMode.equalsIgnoreCase("off") || newMode.equalsIgnoreCase("disable")) {
+            AntiMulti.getPlugin().getPlayerListener().toggleWhitelist(false);
             sender.sendMessage(ChatColor.GREEN + "The AntiMulti whitelist has been deactivated");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
@@ -65,7 +63,7 @@ public class Whitelist extends CommandManager {
                 }
             }
             if (!(sender instanceof ConsoleCommandSender)) {
-                AMLogger.info("AntiMulti whitelist has been deactivated");
+                AMLogger.info("AntiMulti whitelist has been deactivated by " + sender.getName());
             }
             return true;
         }
@@ -80,17 +78,6 @@ public class Whitelist extends CommandManager {
 
     @Override
     public String getHelp() {
-        return "whitelist <on|1|enable off|0|disable status>";
-    }
-
-    @Override
-    public void reload() {
-        if (Configuration.startWhitelist()) {
-            AntiMulti.pListener.toggleWhitelist(true);
-        }
-    }
-
-    @Override
-    public void disable() {
+        return "whitelist <on|enable|off|disable|status>";
     }
 }

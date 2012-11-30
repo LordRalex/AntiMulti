@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public abstract class Database {
 
-    protected Logger log;
+    protected final Logger log;
     protected final String PREFIX;
     protected final String DATABASE_PREFIX;
     protected boolean connected;

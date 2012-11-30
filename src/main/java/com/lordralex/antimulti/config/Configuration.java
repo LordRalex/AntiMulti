@@ -2,11 +2,10 @@ package com.lordralex.antimulti.config;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.logger.AMLogger;
-import com.lordralex.antimulti.utils.Formatter;
 import java.io.File;
-import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 /**
  * @version 1.0
@@ -15,7 +14,7 @@ import org.bukkit.configuration.file.FileConfiguration;
  */
 public class Configuration {
 
-    private static AntiMulti plugin;
+    private static Plugin plugin;
     private static int playerIPLimit = 2;
     private static int playerNameLimit = 2;
     private static int adminIPLimit = 1;
@@ -37,22 +36,16 @@ public class Configuration {
     private static boolean sqlEnable = false;
 
     /**
-     * Loads the config for the instance of the AntiMulti plugin passed. This
-     * also checks to see if the current config is up to date and loads the
-     * values to the RAM for fast access later.
+     * Loads the config for the instance of the AntiMulti plugin passed.
      *
      * @param aP The AntiMulti instance to load the config for
      */
-    public static void loadConfig(AntiMulti aP) {
+    public static void loadConfig(Plugin aP) {
         plugin = aP;
         FileConfiguration config = plugin.getConfig();
         if (!(new File(plugin.getDataFolder(), "config.yml").exists())) {
             AMLogger.info("No config found, generating default config");
             plugin.saveDefaultConfig();
-        }
-        if (config.getString("version") == null || !config.getString("version", plugin.getDescription().getVersion()).equalsIgnoreCase(plugin.getDescription().getVersion())) {
-            AMLogger.info("Older config version detected, updating config to new version");
-            convert(config);
         }
 
         playerIPLimit = config.getInt("limits.member.IP", playerIPLimit);
@@ -74,63 +67,6 @@ public class Configuration {
         sqlUser = config.getString("mysql.user", sqlUser);
         sqlPass = config.getString("mysql.pass", sqlPass);
         sqlDB = config.getString("mysql.db", sqlDB);
-
-        config.set("limits.member.IP", playerIPLimit);
-        config.set("limits.member.name", playerNameLimit);
-        config.set("limits.admin.IP", adminIPLimit);
-        config.set("limits.admin.name", adminNameLimit);
-        config.set("throddle", loginThroddle);
-        config.set("messages.whitelist", whitelistMessage);
-        config.set("messages.max.ip", maxIPsUsed);
-        config.set("messages.max.name", maxNamesUsed);
-        config.set("protection.ip", useIPProt);
-        config.set("fake-online", fakeOnline);
-        config.set("start.whitelist", startWhitelist);
-        config.set("whitelist.override-vanilla", overrideVanillaWL);
-        config.set("move-buffer", moveBuffer);
-        config.set("mysql.enable", sqlEnable);
-        config.set("mysql.host", sqlHost);
-        config.set("mysql.port", sqlPort);
-        config.set("mysql.user", sqlUser);
-        config.set("mysql.pass", sqlPass);
-        config.set("mysql.db", sqlDB);
-        config.set("version", plugin.getDescription().getVersion());
-        try {
-            config.save(new File(plugin.getDataFolder(), "config.yml"));
-        } catch (IOException ex) {
-            AMLogger.error(ex, "Error saving AntiMulti config");
-        }
-
-        if (fakeOnline && !Bukkit.getOnlineMode()) {
-            useIPProt = true;
-        }
-        whitelistMessage = Formatter.handleColorCodes(whitelistMessage);
-        maxIPsUsed = Formatter.handleColorCodes(maxIPsUsed);
-        maxNamesUsed = Formatter.handleColorCodes(maxNamesUsed);
-    }
-
-    private static void convert(FileConfiguration config) {
-        AMLogger.info("Going to try to update your config from " + config.getString("version", "an unknown version (will assume 2.0.2)") + " to " + plugin.getDescription().getVersion());
-        String oldversion = config.getString("version", "2.0.2").toLowerCase().trim();
-        if (oldversion.equalsIgnoreCase("2.0.2")) {
-            loginThroddle = config.getInt("logins-per-second", loginThroddle);
-            playerIPLimit = config.getInt("max-ips", playerIPLimit);
-            playerNameLimit = config.getInt("max-names", playerNameLimit);
-            adminIPLimit = config.getInt("max-admin-ips", adminIPLimit);
-            adminNameLimit = config.getInt("max-admin-names", adminNameLimit);
-        }
-
-        config.set("limits.member.IP", playerIPLimit);
-        config.set("limits.member.name", playerNameLimit);
-        config.set("limits.admin.IP", adminIPLimit);
-        config.set("limits.admin.name", adminNameLimit);
-        config.set("throddle", loginThroddle);
-        config.set("version", plugin.getDescription().getVersion());
-        try {
-            config.save(new File(plugin.getDataFolder(), "config.yml"));
-        } catch (IOException ex) {
-            AMLogger.error(ex, "Error saving AntiMulti config");
-        }
     }
 
     public static String getPluginVersion() {
@@ -185,7 +121,7 @@ public class Configuration {
         return overrideVanillaWL;
     }
 
-    public static AntiMulti getPlugin() {
+    public static Plugin getPlugin() {
         return plugin;
     }
 

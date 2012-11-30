@@ -64,7 +64,7 @@ public class PlayerListener implements Listener {
      *
      * @param event The PlayerLoginEvent to associate with
      */
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerLoginEvent event) {
         if (event.getResult() != Result.ALLOWED) {
             return;
@@ -87,49 +87,6 @@ public class PlayerListener implements Listener {
         if (!ip(event)) {
             return;
         }
-    }
-
-    private boolean checkOnline(PlayerLoginEvent event) {
-        String name = event.getPlayer().getName();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getName().equalsIgnoreCase(name)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean throddle(PlayerLoginEvent event) {
-        if (!allowConnection) {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Try to connect again");
-            return false;
-        }
-        threadID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-
-            @Override
-            public void run() {
-                allowConnection = true;
-            }
-        }, connectionRate);
-        return true;
-    }
-
-    private boolean whitelist(PlayerLoginEvent event) {
-        if (!whitelist) {
-            return true;
-        }
-        Player player = event.getPlayer();
-        return player.hasPermission("antimulti.whitelist");
-    }
-
-    private boolean ip(PlayerLoginEvent event) {
-        if (!checkNameToIp(event)) {
-            return false;
-        }
-        if (!checkIpToName(event)) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -158,6 +115,16 @@ public class PlayerListener implements Listener {
      */
     public boolean checkPerm(Player player, String permission) {
         return player.hasPermission(permission);
+    }
+    
+    private boolean checkOnline(PlayerLoginEvent event) {
+        String name = event.getPlayer().getName();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private boolean checkIpToName(PlayerLoginEvent event) {
@@ -194,11 +161,38 @@ public class PlayerListener implements Listener {
         return true;
     }
 
-    /**
-     * Cancels the login throddle thread. This will reset the throddle, although
-     * really should not be used.
-     */
-    public void cancelLoginThroddle() {
-        Bukkit.getScheduler().cancelTask(threadID);
+    private boolean throddle(PlayerLoginEvent event) {
+        if (!allowConnection) {
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Try to connect again in a second");
+            return false;
+        }
+        if (threadID != 0) {
+            Bukkit.getScheduler().cancelTask(threadID);
+        }
+        threadID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+            @Override
+            public void run() {
+                allowConnection = true;
+            }
+        }, connectionRate);
+        return true;
+    }
+
+    private boolean whitelist(PlayerLoginEvent event) {
+        if (!whitelist) {
+            return true;
+        }
+        Player player = event.getPlayer();
+        return player.hasPermission("antimulti.whitelist");
+    }
+
+    private boolean ip(PlayerLoginEvent event) {
+        if (!checkNameToIp(event)) {
+            return false;
+        }
+        if (!checkIpToName(event)) {
+            return false;
+        }
+        return true;
     }
 }

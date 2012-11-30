@@ -1,5 +1,6 @@
 package com.lordralex.antimulti.files;
 
+import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.io.File;
@@ -7,8 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -25,28 +24,10 @@ public class FlatFileManager implements Manager {
 
     @Override
     public Manager setup() {
-        passFolder = new File(Configuration.getPlugin().getUserFolder(), "passwords");
-        ipFolder = new File(Configuration.getPlugin().getUserFolder(), "ips");
-        nameFolder = new File(Configuration.getPlugin().getUserFolder(), "names");
+        passFolder = new File(AntiMulti.getPlugin().getUserFolder(), "passwords");
+        ipFolder = new File(AntiMulti.getPlugin().getUserFolder(), "ips");
+        nameFolder = new File(AntiMulti.getPlugin().getUserFolder(), "names");
         return this;
-    }
-
-    @Override
-    public String getPassword(String aName) {
-        String name = aName.toLowerCase().trim();
-        File temp = new File(passFolder, name + ".yml");
-        FileConfiguration user = YamlConfiguration.loadConfiguration(temp);
-        String password = user.getString("password", "None");
-        return password;
-    }
-
-    @Override
-    public void setPassword(String aName, String newPass) throws IOException {
-        String name = aName.toLowerCase().trim();
-        File temp = new File(passFolder, name + ".yml");
-        FileConfiguration user = YamlConfiguration.loadConfiguration(temp);
-        user.set("password", newPass);
-        user.save(temp);
     }
 
     @Override

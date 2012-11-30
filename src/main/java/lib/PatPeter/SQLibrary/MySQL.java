@@ -126,9 +126,6 @@ public class MySQL extends Database {
             statement = connection.createStatement();
             statement.execute(query);
             return true;
-        } catch (SQLException e) {
-            this.writeError(e.getMessage(), true);
-            return false;
         } catch (Exception e) {
             this.writeError(e.getMessage(), true);
             return false;

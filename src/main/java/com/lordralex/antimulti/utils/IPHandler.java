@@ -76,6 +76,36 @@ public final class IPHandler {
     public static boolean contains(InetAddress ip, InetAddress ip2) {
         return contains(ip.getHostAddress(), ip2.getHostAddress());
     }
+    
+    /**
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
+     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
+     * with 192.168.1.1-10
+     *
+     * @param ip The first IP to check
+     * @param ip2 The second IP to check
+     * @return True if the IPs are the same, false otherwise
+     * @see contains(String, String)
+     * @since 3.0
+     */
+    public static boolean contains(String ip, InetAddress ip2) {
+        return contains(ip, ip2.getHostAddress());
+    }
+    
+    /**
+     * Checks 2 IPs to see if they match. This also checks for the wildcard (*),
+     * so for example, 192.168.1.4 will return true with 192.168.1.*, but not
+     * with 192.168.1.1-10
+     *
+     * @param ip The first IP to check
+     * @param ip2 The second IP to check
+     * @return True if the IPs are the same, false otherwise
+     * @see contains(String, String)
+     * @since 3.0
+     */
+    public static boolean contains(InetAddress ip, String ip2) {
+        return contains(ip.getHostAddress(), ip2);
+    }
 
     /**
      * Checks a list to see if an ip is listed. This also checks for the

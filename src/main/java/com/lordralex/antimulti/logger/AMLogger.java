@@ -1,14 +1,14 @@
 package com.lordralex.antimulti.logger;
 
-import com.lordralex.antimulti.AntiMulti;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.plugin.Plugin;
 
 /**
- * This is the AntiMulti logger. This should be used since this is able to write
- * to a file and to the console.
+ * This is the Plugin logger. This should be used since this is able to the
+ * console and is accessable statically.
  *
- * @version 1.0
+ * @version 3.0
  * @author Joshua
  * @since 1.2
  */
@@ -22,7 +22,7 @@ public class AMLogger {
      *
      * @param plugin The plugin
      */
-    public static void setup(AntiMulti plugin) {
+    public static void setup(Plugin plugin) {
         logger = plugin.getLogger();
     }
 

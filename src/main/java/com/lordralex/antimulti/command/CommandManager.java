@@ -14,7 +14,7 @@ import org.bukkit.entity.Player;
 
 /**
  * @version 1.1
- * @author icelord871
+ * @author Lord_Ralex
  * @since 1.0
  */
 public abstract class CommandManager implements CommandExecutor {
@@ -25,13 +25,19 @@ public abstract class CommandManager implements CommandExecutor {
     @Override
     public abstract boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args);
 
+    /**
+     * Returns the name of this sub-command
+     * 
+     * @return Name of command
+     */
     public abstract String getName();
 
+    /**
+     * Returns the sub-command's help line
+     * 
+     * @return Help for this command
+     */
     public abstract String getHelp();
-
-    public abstract void reload();
-
-    public abstract void disable();
 
     /**
      * Checks to see if a CommandSender has a permission. If the sender is a
@@ -102,20 +108,10 @@ public abstract class CommandManager implements CommandExecutor {
      */
     public static void stop() {
         for (CommandManager exec : commands) {
-            exec.disable();
             for (String name : exec.getName().split(",")) {
                 plugin.getCommand(name).setExecutor(null);
             }
         }
         commands.clear();
-    }
-
-    /**
-     * Reloads all the registered commands with AntiMulti
-     */
-    public static void reloadAll() {
-        for (CommandManager exec : commands) {
-            exec.reload();
-        }
     }
 }
