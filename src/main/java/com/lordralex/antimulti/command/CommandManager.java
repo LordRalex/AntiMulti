@@ -21,8 +21,7 @@ public class CommandManager {
      * instances for each command, define those commands with Bukkit, and return
      * the list.
      *
-     * @param aPlugin The AntiMulti instance
-     * @return List of registered commands
+     * @param aPlugin The Plugin instance
      */
     public CommandManager(JavaPlugin aPlugin) {
         plugin = aPlugin;
@@ -41,10 +40,10 @@ public class CommandManager {
     }
 
     /**
-     * Returns a list of commands and their {@link CommandManager}s that are
+     * Returns a list of commands and their {@link AMCommand}s that are
      * registered with this manager.
      *
-     * @return List containing all the {@link CommandManager} commands
+     * @return List containing all the {@link AMCommand} commands
      * registered
      */
     public List<AMCommand> getCommands() {
