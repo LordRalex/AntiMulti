@@ -18,6 +18,7 @@ public class AntiMulti extends JavaPlugin {
     private PlayerListener pListener;
     private DataManager manager;
     private static AntiMulti instance;
+    private CommandManager cmdManager;
 
     @Override
     public void onLoad() {
@@ -35,7 +36,7 @@ public class AntiMulti extends JavaPlugin {
             manager = new DataManager();
             pListener = new PlayerListener(instance);
             Bukkit.getPluginManager().registerEvents(pListener, instance);
-            CommandManager.setup(instance);
+            cmdManager = new CommandManager(this);
             AMLogger.info(instance.getTitle() + " successfully enabled");
         } catch (Throwable ex) {
             AMLogger.error(ex, "An error occurred on startup, disabling " + instance.getTitle());

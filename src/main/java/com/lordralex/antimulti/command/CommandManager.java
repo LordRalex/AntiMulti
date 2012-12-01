@@ -5,64 +5,16 @@ import com.lordralex.antimulti.command.commands.Reload;
 import com.lordralex.antimulti.command.commands.Whitelist;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public abstract class CommandManager implements CommandExecutor {
+public class CommandManager {
 
-    protected static JavaPlugin plugin;
-    protected static List<CommandManager> commands = new ArrayList<CommandManager>();
-
-    @Override
-    public abstract boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args);
-
-    /**
-     * Returns the name of this sub-command
-     *
-     * @return Name of command
-     */
-    public abstract String getName();
-
-    /**
-     * Returns the sub-command's help line
-     *
-     * @return Help for this command
-     */
-    public abstract String getHelp();
-
-    /**
-     * Checks to see if a CommandSender has a permission. If the sender is a
-     * ConsoleCommandSender, then this returns true.
-     *
-     * @param sender Sender to check permission
-     * @param permission Permission to check
-     * @return True if player has the permission, false otherwise
-     */
-    public static boolean checkPerm(CommandSender sender, String permission) {
-        if (sender instanceof ConsoleCommandSender) {
-            return true;
-        }
-        return sender.hasPermission(permission);
-    }
-
-    /**
-     * Checks to see if a player has a permission..
-     *
-     * @param player Player to check permission
-     * @param permission Permission to check
-     * @return True if player has the permission, false otherwise
-     */
-    public static boolean checkPerm(Player player, String permission) {
-        return player.hasPermission(permission);
-    }
+    protected JavaPlugin plugin;
+    protected List<AMCommand> commands = new ArrayList<AMCommand>();
 
     /**
      * Sets up the CommandManager. This includes creating the CommandManager
@@ -72,7 +24,7 @@ public abstract class CommandManager implements CommandExecutor {
      * @param aPlugin The AntiMulti instance
      * @return List of registered commands
      */
-    public static List<CommandManager> setup(JavaPlugin aPlugin) {
+    public CommandManager(JavaPlugin aPlugin) {
         plugin = aPlugin;
 
         Whitelist whitelist = new Whitelist();
@@ -86,8 +38,6 @@ public abstract class CommandManager implements CommandExecutor {
         Reload reload = new Reload();
         plugin.getCommand(reload.getName()).setExecutor(reload);
         commands.add(reload);
-
-        return getCommands();
     }
 
     /**
@@ -97,7 +47,7 @@ public abstract class CommandManager implements CommandExecutor {
      * @return List containing all the {@link CommandManager} commands
      * registered
      */
-    public static List<CommandManager> getCommands() {
+    public List<AMCommand> getCommands() {
         return commands;
     }
 
@@ -105,8 +55,8 @@ public abstract class CommandManager implements CommandExecutor {
      * Disables all the commands registered and removes their executors. This
      * should be used only when the server is stopped
      */
-    public static void stop() {
-        for (CommandManager exec : commands) {
+    public void stop() {
+        for (AMCommand exec : commands) {
             for (String name : exec.getName().split(",")) {
                 plugin.getCommand(name).setExecutor(null);
             }

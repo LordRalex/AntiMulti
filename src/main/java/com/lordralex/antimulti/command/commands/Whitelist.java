@@ -1,7 +1,7 @@
 package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.command.CommandManager;
+import com.lordralex.antimulti.command.AMCommand;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import org.bukkit.Bukkit;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Whitelist extends CommandManager {
+public class Whitelist extends AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
@@ -35,14 +35,14 @@ public class Whitelist extends CommandManager {
             sender.sendMessage(ChatColor.RED + "Kicking unauthorized personnel");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
-                    if (!checkPerm(player, "antimulti.whitelist")) {
+                    if (!player.hasPermission("antimulti.whitelist")) {
                         player.kickPlayer(Configuration.getWhitelistMessage());
                     }
                 }
             }
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
-                    if (checkPerm(player, "antimulti.whitelist.notify")) {
+                    if (player.hasPermission("antimulti.whitelist.notify")) {
                         player.sendMessage(ChatColor.RED + sender.getName() + " has activated the AM Whitelist");
                     }
                 }
@@ -56,7 +56,7 @@ public class Whitelist extends CommandManager {
             sender.sendMessage(ChatColor.GREEN + "The AntiMulti whitelist has been deactivated");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
-                    if (checkPerm(player, "antimulti.whitelist.notify")) {
+                    if (player.hasPermission("antimulti.whitelist.notify")) {
                         player.sendMessage(ChatColor.GREEN + sender.getName() + " has deactivated the AM Whitelist");
                     }
                 }

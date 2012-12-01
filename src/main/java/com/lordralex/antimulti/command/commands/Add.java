@@ -1,7 +1,7 @@
 package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.command.CommandManager;
+import com.lordralex.antimulti.command.AMCommand;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import org.bukkit.ChatColor;
@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Add extends CommandManager {
+public class Add extends AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
