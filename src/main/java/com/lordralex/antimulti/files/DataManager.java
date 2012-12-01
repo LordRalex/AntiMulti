@@ -4,11 +4,10 @@ import com.lordralex.antimulti.config.Configuration;
 import org.bukkit.entity.Player;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.2
  */
-public final class DataManager {
+public final class DataManager implements Manager {
 
     private Manager manager;
 
@@ -85,5 +84,13 @@ public final class DataManager {
             manager = new FlatFileManager();
         }
         manager = manager.setup();
+    }
+
+    public Manager setup() {
+        return manager.setup();
+    }
+
+    public void close() {
+        manager.close();
     }
 }
