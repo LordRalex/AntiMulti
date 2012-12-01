@@ -1,6 +1,5 @@
 package com.lordralex.antimulti.command;
 
-import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.command.commands.Add;
 import com.lordralex.antimulti.command.commands.Reload;
 import com.lordralex.antimulti.command.commands.Whitelist;
@@ -11,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @version 3.0.0
@@ -18,7 +18,7 @@ import org.bukkit.entity.Player;
  */
 public abstract class CommandManager implements CommandExecutor {
 
-    protected static AntiMulti plugin;
+    protected static JavaPlugin plugin;
     protected static List<CommandManager> commands = new ArrayList<CommandManager>();
 
     @Override
@@ -72,7 +72,7 @@ public abstract class CommandManager implements CommandExecutor {
      * @param aPlugin The AntiMulti instance
      * @return List of registered commands
      */
-    public static List<CommandManager> setup(AntiMulti aPlugin) {
+    public static List<CommandManager> setup(JavaPlugin aPlugin) {
         plugin = aPlugin;
 
         Whitelist whitelist = new Whitelist();
