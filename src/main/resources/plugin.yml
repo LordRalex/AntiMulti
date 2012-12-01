@@ -5,7 +5,7 @@ website: ${project.url}
 dev-url: http://www.minecraftforum.net/user/731553-lord-ralex/
 author: Lord_Ralex
 prefix: ${project.name}
-description: "The Anti-Alt Protection Plugin with some extra crap"
+description: "The Anti-Alt Protection Plugin, protecting with ips"
 commands:
   whitelist:
     usage: "/<command> [on|1|enable|off|0|disable|status]"
