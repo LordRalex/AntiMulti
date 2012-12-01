@@ -1,3 +1,40 @@
+#Explanation of this file, suggest reading so you know what
+#everything does
+#
+#protection: which protections to enable
+#protection.ip: whether to enable the IP protection (true/false)
+#
+#limits: the limits to names and ips
+#limits.member: limits set on members
+#limits.member.ip: how many ips a member can use
+#limits.member.name: how many names can use one ip
+#limits.admin: limits set on admins
+#limits.admin.ip: how many ips an admin can use
+#limits.admin.name: how many names can use one ip
+#
+#throddle: how many ticks between logins
+
+#messages: allows setting of different messages
+#messages.whitelist: the kick message when the antimulti whitelist is on
+#messages.max: the messages to show when a certain limit is reached
+#messages.max.ip: the message to show when the ip has been used too many times
+#messages.max.name: the message to show when the name has used too many ips
+#
+#startup: toggle what things start up with the server
+#startup.whitelist: whether to start the antimulti whitelist on server start (true/false)
+#
+#version: the version this config was made from (do not touch this please)
+#
+#mysql: the mysql details
+#mysql.enable: whether to use the mysql for storage (true/false) if false, the rest may be left blank
+#mysql.host: the host used to connect to the mysql
+#mysql.port: the port used to conect to the mysql
+#mysql.user: the username used to connect to the mysql
+#mysql.pass: the password used to connect to the mysql
+#mysql.db: the database to use
+
+protection:
+  ip: true
 limits:
   member:
     ip: 2
@@ -11,12 +48,9 @@ messages:
   max:
     ip: 'Too many IPs used'
     name: 'Too many names used'
-protection:
-  ip: true
 startup:
   whitelist: false
-version: 2.0.6
-encryption: md5
+version: ${project.version}
 mysql:
   enable: false
   host: localhost
