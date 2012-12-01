@@ -7,9 +7,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.2
  */
 public class Configuration {
 

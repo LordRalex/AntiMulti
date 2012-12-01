@@ -11,9 +11,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 2.0.5
  */
 public class FlatFileManager implements Manager {
 

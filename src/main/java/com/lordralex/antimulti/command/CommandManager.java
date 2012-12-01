@@ -13,9 +13,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.0
  */
 public abstract class CommandManager implements CommandExecutor {
 
@@ -27,14 +26,14 @@ public abstract class CommandManager implements CommandExecutor {
 
     /**
      * Returns the name of this sub-command
-     * 
+     *
      * @return Name of command
      */
     public abstract String getName();
 
     /**
      * Returns the sub-command's help line
-     * 
+     *
      * @return Help for this command
      */
     public abstract String getHelp();

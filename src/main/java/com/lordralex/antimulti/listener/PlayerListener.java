@@ -15,9 +15,8 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.2
  */
 public class PlayerListener implements Listener {
 
@@ -108,6 +107,7 @@ public class PlayerListener implements Listener {
     }
 
     /**
+     * Checks to see if a player has a certain permission
      *
      * @param player The player to check
      * @param permission The permission to check

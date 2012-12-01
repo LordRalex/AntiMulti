@@ -10,9 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.0
  */
 public class AntiMulti extends JavaPlugin {
 
@@ -22,10 +21,10 @@ public class AntiMulti extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        getLogger().info("Beginning setup of " + getTitle());
+        this.getLogger().info("Beginning setup of " + getTitle());
         instance = this;
         AMLogger.setup(instance);
-        getLogger().info("Initial setup complete");
+        this.getLogger().info("Initial setup complete");
     }
 
     @Override
@@ -74,24 +73,6 @@ public class AntiMulti extends JavaPlugin {
     }
 
     /**
-     * Returns the DataManager that is being used to read and write data
-     *
-     * @return The DataManager in use
-     */
-    public DataManager getManager() {
-        return manager;
-    }
-
-    /**
-     * Returns the instance of this plugin
-     *
-     * @return Instance of plugin
-     */
-    public static AntiMulti getPlugin() {
-        return instance;
-    }
-
-    /**
      * Returns a title for this plugin, formatted as "[Name]-[Version]"
      *
      * @return The title of this plugin
@@ -101,11 +82,29 @@ public class AntiMulti extends JavaPlugin {
     }
 
     /**
+     * Returns the DataManager that is being used to read and write data
+     *
+     * @return The DataManager in use
+     */
+    public DataManager getManager() {
+        return manager;
+    }
+
+    /**
      * Returns the PlayerListener that is being used for this plugin
      *
      * @return The PlayerListener for this plugin
      */
     public PlayerListener getPlayerListener() {
         return pListener;
+    }
+
+    /**
+     * Returns the instance of this plugin
+     *
+     * @return Instance of plugin
+     */
+    public static AntiMulti getPlugin() {
+        return instance;
     }
 }

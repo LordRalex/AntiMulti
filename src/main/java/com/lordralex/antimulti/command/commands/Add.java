@@ -9,9 +9,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 /**
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.0
  */
 public class Add extends CommandManager {
 

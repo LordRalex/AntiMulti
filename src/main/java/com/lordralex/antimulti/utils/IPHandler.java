@@ -9,9 +9,8 @@ import java.util.List;
  * Handles comparison of 2 IPs. This allows checks of IPs including ranges and
  * wildcards.
  *
- * @version 3.0
+ * @version 3.0.0
  * @author Lord_Ralex
- * @since 1.2
  */
 public final class IPHandler {
 
@@ -22,7 +21,6 @@ public final class IPHandler {
      * @param ip1 The first IP to check
      * @param ip2 The second IP to check
      * @return True if the ips are the same, false otherwise
-     * @since 1.0
      */
     public static boolean contains(String ip1, String ip2) {
         try {
@@ -86,7 +84,6 @@ public final class IPHandler {
      * @param ip2 The second IP to check
      * @return True if the IPs are the same, false otherwise
      * @see contains(String, String)
-     * @since 1.0
      */
     public static boolean contains(InetAddress ip, InetAddress ip2) {
         return contains(ip.getHostAddress(), ip2.getHostAddress());
@@ -100,7 +97,6 @@ public final class IPHandler {
      * @param ip2 The second IP to check
      * @return True if the IPs are the same, false otherwise
      * @see contains(String, String)
-     * @since 3.0
      */
     public static boolean contains(String ip, InetAddress ip2) {
         return contains(ip, ip2.getHostAddress());
@@ -114,7 +110,6 @@ public final class IPHandler {
      * @param ip2 The second IP to check
      * @return True if the IPs are the same, false otherwise
      * @see contains(String, String)
-     * @since 3.0
      */
     public static boolean contains(InetAddress ip, String ip2) {
         return contains(ip.getHostAddress(), ip2);
@@ -127,7 +122,6 @@ public final class IPHandler {
      * @param list The list of IPs to check with
      * @param ip The ip to attempt to find
      * @return True if the list contains the IP, false otherwise
-     * @since 1.0
      */
     public static boolean contains(List<String> list, String ip) {
         for (String test : list) {
