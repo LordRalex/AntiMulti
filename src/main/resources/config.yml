@@ -13,7 +13,7 @@
 #limits.admin.name: how many names can use one ip
 #
 #throddle: how many ticks between logins
-
+#
 #messages: allows setting of different messages
 #messages.whitelist: the kick message when the antimulti whitelist is on
 #messages.max: the messages to show when a certain limit is reached
