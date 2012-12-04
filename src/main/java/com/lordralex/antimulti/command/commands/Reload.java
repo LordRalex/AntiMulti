@@ -14,9 +14,9 @@ public class Reload extends AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
-        sender.sendMessage(ChatColor.RED + "Reloading AntiMulti");
+        sender.sendMessage(ChatColor.YELLOW + "Reloading AntiMulti configuration");
         Configuration.reloadConfig();
-        sender.sendMessage(ChatColor.GREEN + "AntiMulti reloaded");
+        sender.sendMessage(ChatColor.GREEN + "AntiMulti reloaded.");
         return true;
     }
 

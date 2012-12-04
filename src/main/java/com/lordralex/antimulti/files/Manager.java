@@ -1,5 +1,7 @@
 package com.lordralex.antimulti.files;
 
+import com.lordralex.antimulti.AntiMulti;
+
 /**
  * @version 3.0.0
  * @author Lord_Ralex
@@ -43,7 +45,7 @@ public interface Manager {
      *
      * @return
      */
-    public abstract Manager setup();
+    public abstract Manager setup(AntiMulti plugin);
 
     /**
      * Closes the manager.

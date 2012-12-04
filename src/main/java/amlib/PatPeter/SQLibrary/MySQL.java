@@ -5,7 +5,7 @@
  *
  * @author PatPeter
  */
-package lib.PatPeter.SQLibrary;
+package amlib.PatPeter.SQLibrary;
 
 import java.sql.*;
 import java.util.logging.Logger;

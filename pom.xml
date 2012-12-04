@@ -39,6 +39,7 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
+				 <showDeprecation>true</showDeprecation>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -47,9 +48,20 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.4.2-R0.2</version>
+			<version>1.4.5-R0.3-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
+ <reporting>
+  <plugins>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-checkstyle-plugin</artifactId>
+    <configuration>
+     <configLocation>config/sun_checks.xml</configLocation>
+    </configuration>
+   </plugin>
+  </plugins>
+ </reporting>
 </project>

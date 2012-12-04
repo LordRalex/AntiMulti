@@ -16,16 +16,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
  */
 public class FlatFileManager implements Manager {
 
-    File ipFolder, passFolder, nameFolder;
+    File ipFolder, nameFolder;
 
     public FlatFileManager() {
     }
 
     @Override
-    public Manager setup() {
-        passFolder = new File(AntiMulti.getPlugin().getUserFolder(), "passwords");
-        ipFolder = new File(AntiMulti.getPlugin().getUserFolder(), "ips");
-        nameFolder = new File(AntiMulti.getPlugin().getUserFolder(), "names");
+    public Manager setup(AntiMulti plugin) {
+        ipFolder = new File(plugin.getUserFolder(), "ips");
+        nameFolder = new File(plugin.getUserFolder(), "names");
         return this;
     }
 

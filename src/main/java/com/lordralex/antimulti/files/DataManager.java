@@ -1,6 +1,8 @@
 package com.lordralex.antimulti.files;
 
+import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.logger.AMLogger;
 import org.bukkit.entity.Player;
 
 /**
@@ -11,29 +13,30 @@ public final class DataManager implements Manager {
 
     private Manager manager;
 
-    public DataManager() {
+    public DataManager(AntiMulti plugin) {
         if (Configuration.useSQL()) {
+            AMLogger.info("The config says to use mySQL, so starting up mySQL systems");
             manager = new SQLManager();
         } else {
+            AMLogger.info("Using files to store player information");
             manager = new FlatFileManager();
         }
-        manager = manager.setup();
+        manager = manager.setup(plugin);
     }
 
+    @Override
     public String[] getIPs(String name) {
         if (name == null) {
-            return null;
+            return new String[0];
         }
         return manager.getIPs(name.toLowerCase().trim());
     }
 
     public String[] getIPs(Player player) {
-        if (player == null) {
-            return null;
-        }
         return getIPs(player.getName());
     }
 
+    @Override
     public String[] getNames(String ip) {
         if (ip == null) {
             return new String[0];
@@ -42,12 +45,10 @@ public final class DataManager implements Manager {
     }
 
     public String[] getNames(Player player) {
-        if (player == null) {
-            return new String[0];
-        }
         return manager.getNames(player.getAddress().getAddress().getHostAddress());
     }
 
+    @Override
     public void addName(String ip, String name) {
         if (name == null || ip == null) {
             return;
@@ -56,12 +57,10 @@ public final class DataManager implements Manager {
     }
 
     public void addName(Player player) {
-        if (player == null) {
-            return;
-        }
         addName(player.getAddress().getAddress().getHostAddress(), player.getName());
     }
 
+    @Override
     public void addIP(String name, String ip) {
         if (name == null || ip == null) {
             return;
@@ -70,26 +69,15 @@ public final class DataManager implements Manager {
     }
 
     public void addIP(Player player) {
-        if (player == null) {
-            return;
-        }
         addIP(player.getName(), player.getAddress().getAddress().getHostAddress());
     }
 
-    public void reload() {
-        manager.close();
-        if (Configuration.useSQL()) {
-            manager = new SQLManager();
-        } else {
-            manager = new FlatFileManager();
-        }
-        manager = manager.setup();
+    @Override
+    public Manager setup(AntiMulti plugin) {
+        return manager.setup(plugin);
     }
 
-    public Manager setup() {
-        return manager.setup();
-    }
-
+    @Override
     public void close() {
         manager.close();
     }

@@ -1,5 +1,7 @@
 package com.lordralex.antimulti.files;
 
+import amlib.PatPeter.SQLibrary.MySQL;
+import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.sql.Connection;
@@ -7,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import lib.PatPeter.SQLibrary.MySQL;
 
 /**
  * @version 3.0.0
@@ -19,9 +20,9 @@ public class SQLManager implements Manager {
     Connection conn;
 
     @Override
-    public Manager setup() {
+    public Manager setup(AntiMulti plugin) {
         String[] info = Configuration.getSQLInfo();
-        mysql = new MySQL(Configuration.getPlugin().getLogger(), "[AM]", info[0], info[1], info[4], info[2], info[3]);
+        mysql = new MySQL(plugin.getLogger(), "[AM]", info[0], info[1], info[4], info[2], info[3]);
         conn = mysql.getConnection();
         mysql.open();
         if (mysql.checkConnection()) {
@@ -31,7 +32,7 @@ public class SQLManager implements Manager {
         } else {
             AMLogger.severe("Unable to connect to mySQL database, using flatfile system");
             Manager manager = new FlatFileManager();
-            manager.setup();
+            manager.setup(plugin);
             return manager;
         }
     }

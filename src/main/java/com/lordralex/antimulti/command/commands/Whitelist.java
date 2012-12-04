@@ -22,9 +22,9 @@ public class Whitelist extends AMCommand {
 
         if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
             String status = "The AntiMulti Whitelist is currently "
-                    + (AntiMulti.getPlugin().getPlayerListener().getWhitelistStatus()
+                    + ( AntiMulti.getPlugin().getPlayerListener().getWhitelistStatus()
                     ? "on"
-                    : "off");
+                    : "off" );
             sender.sendMessage(ChatColor.GREEN + status);
             return true;
         }
@@ -43,11 +43,11 @@ public class Whitelist extends AMCommand {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
                     if (player.hasPermission("antimulti.whitelist.notify")) {
-                        player.sendMessage(ChatColor.RED + sender.getName() + " has activated the AM Whitelist");
+                        player.sendMessage(ChatColor.RED + sender.getName() + " has activated the AntiMulti Whitelist");
                     }
                 }
             }
-            if (!(sender instanceof ConsoleCommandSender)) {
+            if (!( sender instanceof ConsoleCommandSender )) {
                 AMLogger.info("AntiMulti whitelist has been activated by " + sender.getName());
             }
             return true;
@@ -57,17 +57,18 @@ public class Whitelist extends AMCommand {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
                     if (player.hasPermission("antimulti.whitelist.notify")) {
-                        player.sendMessage(ChatColor.GREEN + sender.getName() + " has deactivated the AM Whitelist");
+                        player.sendMessage(ChatColor.GREEN + sender.getName() + " has deactivated the AntiMulti Whitelist");
                     }
                 }
             }
-            if (!(sender instanceof ConsoleCommandSender)) {
+            if (!( sender instanceof ConsoleCommandSender )) {
                 AMLogger.info("AntiMulti whitelist has been deactivated by " + sender.getName());
             }
             return true;
+        } else {
+            sender.sendMessage(ChatColor.RED + "The command usage is " + getHelp());
+            return true;
         }
-        sender.sendMessage(ChatColor.RED + "Hmm, there seems to have been an issue with the command");
-        return true;
     }
 
     @Override

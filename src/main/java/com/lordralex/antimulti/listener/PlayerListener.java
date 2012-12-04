@@ -37,18 +37,9 @@ public class PlayerListener implements Listener {
      */
     public PlayerListener(AntiMulti aPlugin) {
         plugin = aPlugin;
-        int perSec = Configuration.getLoginThroddle();
-        if (perSec > 20) {
-            perSec = 20;
-        }
-        try {
-            connectionRate = 20 / perSec;
-            if (connectionRate < 1) {
-                throw new IndexOutOfBoundsException("Connection rate too low");
-            }
-        } catch (IndexOutOfBoundsException e) {
-            AMLogger.warning("Error with the connection rate, defaulting");
-            connectionRate = 20 / 4;
+        connectionRate = Configuration.getLoginThroddle();
+        if (connectionRate < 0) {
+            AMLogger.warning("Your config's connection rate is below 0, will set it to 0");
         }
         maxIPs = Configuration.getPlayerIPLimit();
         maxAdminIPs = Configuration.getAdminIPLimit();
@@ -116,7 +107,7 @@ public class PlayerListener implements Listener {
     public boolean checkPerm(Player player, String permission) {
         return player.hasPermission(permission);
     }
-    
+
     private boolean checkOnline(PlayerLoginEvent event) {
         String name = event.getPlayer().getName();
         for (Player player : Bukkit.getOnlinePlayers()) {
@@ -133,10 +124,14 @@ public class PlayerListener implements Listener {
         List<String> names = Arrays.asList(plugin.getManager().getNames(ip));
         if (names.isEmpty()) {
         } else if (names.contains(name)) {
+            //the name list contained their name, accept
             return true;
         } else if (names.size() < maxNamesAdmin && checkPerm(event.getPlayer(), "antimulti.admin")) {
+            //player is an admin but has not reached enough names
         } else if (names.size() < maxNames) {
+            //player is not an admin but has not reach enough names
         } else {
+            //player has used too many names, so kick them
             event.disallow(Result.KICK_OTHER, Configuration.getMaxNameMessage());
             return false;
         }
@@ -163,18 +158,22 @@ public class PlayerListener implements Listener {
 
     private boolean throddle(PlayerLoginEvent event) {
         if (!allowConnection) {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Try to connect again in a second");
+            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Please wait to login");
             return false;
         }
         if (threadID != 0) {
             Bukkit.getScheduler().cancelTask(threadID);
         }
-        threadID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-            @Override
-            public void run() {
-                allowConnection = true;
-            }
-        }, connectionRate);
+        if (connectionRate > 0) {
+            threadID = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+                @Override
+                public void run() {
+                    allowConnection = true;
+                }
+            }, connectionRate);
+            allowConnection = false;
+        }
+
         return true;
     }
 

@@ -22,7 +22,6 @@ public class AntiMulti extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        this.getLogger().info("Beginning setup of " + getTitle());
         instance = this;
         AMLogger.setup(instance);
         this.getLogger().info("Initial setup complete");
@@ -31,12 +30,16 @@ public class AntiMulti extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
-            AMLogger.info(instance.getTitle() + " is now enabling");
+            AMLogger.info("Loading configuration");
             Configuration.loadConfig(instance);
-            manager = new DataManager();
+            AMLogger.info("Setting up data managers");
+            manager = new DataManager(this);
+            AMLogger.info("Creating player listeners");
             pListener = new PlayerListener(instance);
             Bukkit.getPluginManager().registerEvents(pListener, instance);
+            AMLogger.info("Registering commands");
             cmdManager = new CommandManager(this);
+            AMLogger.info("All systems operational");
             AMLogger.info(instance.getTitle() + " successfully enabled");
         } catch (Throwable ex) {
             AMLogger.error(ex, "An error occurred on startup, disabling " + instance.getTitle());
@@ -98,6 +101,15 @@ public class AntiMulti extends JavaPlugin {
      */
     public PlayerListener getPlayerListener() {
         return pListener;
+    }
+
+    /**
+     * Returns the CommandManager that is being used for this plugin
+     *
+     * @return The CommandManager for this plugin
+     */
+    public CommandManager getCommandManager() {
+        return cmdManager;
     }
 
     /**
