@@ -15,11 +15,10 @@ import org.bukkit.entity.Player;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Whitelist extends AMCommand {
+public class Whitelist implements AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
-
         if (args.length == 0 || args[0].equalsIgnoreCase("status")) {
             String status = "The AntiMulti Whitelist is currently "
                     + ( AntiMulti.getPlugin().getPlayerListener().getWhitelistStatus()

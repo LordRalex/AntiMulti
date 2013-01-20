@@ -3,6 +3,7 @@ package com.lordralex.antimulti.command;
 import com.lordralex.antimulti.command.commands.Add;
 import com.lordralex.antimulti.command.commands.Reload;
 import com.lordralex.antimulti.command.commands.Whitelist;
+import com.lordralex.antimulti.config.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,9 +27,11 @@ public class CommandManager {
     public CommandManager(JavaPlugin aPlugin) {
         plugin = aPlugin;
 
-        Whitelist whitelist = new Whitelist();
-        plugin.getCommand(whitelist.getName()).setExecutor(whitelist);
-        commands.add(whitelist);
+        if (Configuration.overrideVanillaWL()) {
+            Whitelist whitelist = new Whitelist();
+            plugin.getCommand(whitelist.getName()).setExecutor(whitelist);
+            commands.add(whitelist);
+        }
 
         Add add = new Add();
         plugin.getCommand(add.getName()).setExecutor(add);
@@ -43,8 +46,7 @@ public class CommandManager {
      * Returns a list of commands and their {@link AMCommand}s that are
      * registered with this manager.
      *
-     * @return List containing all the {@link AMCommand} commands
-     * registered
+     * @return List containing all the {@link AMCommand} commands registered
      */
     public List<AMCommand> getCommands() {
         return commands;

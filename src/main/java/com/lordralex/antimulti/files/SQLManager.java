@@ -5,6 +5,7 @@ import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,15 +27,21 @@ public class SQLManager implements Manager {
         conn = mysql.getConnection();
         mysql.open();
         if (mysql.checkConnection()) {
-            mysql.query("CREATE TABLE IF NOT EXISTS amips (ip VARCHAR(16), names VARCHAR(160), PRIMARY KEY (ip));");
-            mysql.query("CREATE TABLE IF NOT EXISTS amnames (name VARCHAR(16), ips VARCHAR(160), PRIMARY KEY (name));");
-            return this;
-        } else {
-            AMLogger.severe("Unable to connect to mySQL database, using flatfile system");
-            Manager manager = new FlatFileManager();
-            manager.setup(plugin);
-            return manager;
+            try {
+                PreparedStatement pre1 = mysql.prepare("CREATE TABLE IF NOT EXISTS amips (ip VARCHAR(16), names VARCHAR(160), PRIMARY KEY (ip));");
+                pre1.executeUpdate();
+                PreparedStatement pre2 = mysql.prepare("CREATE TABLE IF NOT EXISTS amnames (name VARCHAR(16), ips VARCHAR(160), PRIMARY KEY (name));");
+                pre2.executeUpdate();
+                return this;
+            }
+            catch (SQLException e) {
+                AMLogger.error(e, "Unable to query database, changing to flat files");
+            }
         }
+        AMLogger.severe("Unable to connect to mySQL database, using flatfile system");
+        Manager manager = new FlatFileManager();
+        manager.setup(plugin);
+        return manager;
     }
 
     @Override
@@ -42,18 +49,19 @@ public class SQLManager implements Manager {
         try {
             conn.close();
             mysql.close();
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             AMLogger.error(ex);
         }
     }
 
     @Override
     public String[] getIPs(String name) {
-        ResultSet result = mysql.query("SELECT ips FROM amnames WHERE name=' " + name + "';");
-        if (result == null) {
-            return null;
-        }
         try {
+            ResultSet result = mysql.prepare("SELECT ips FROM amnames WHERE name=' " + name + "';").executeQuery();
+            if (result == null) {
+                return null;
+            }
             String ip;
             if (!result.last()) {
                 ip = null;
@@ -67,7 +75,8 @@ public class SQLManager implements Manager {
                 String[] ips = ip.split("$");
                 return ips;
             }
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             AMLogger.error(ex);
             return new String[0];
         }
@@ -75,11 +84,11 @@ public class SQLManager implements Manager {
 
     @Override
     public String[] getNames(String ip) {
-        ResultSet result = mysql.query("SELECT names FROM amips WHERE ip=' " + ip + "';");
-        if (result == null) {
-            return null;
-        }
         try {
+            ResultSet result = mysql.prepare("SELECT names FROM amips WHERE ip=' " + ip + "';").executeQuery();
+            if (result == null) {
+                return null;
+            }
             String name;
             if (!result.last()) {
                 name = null;
@@ -93,7 +102,8 @@ public class SQLManager implements Manager {
                 String[] names = name.split("$");
                 return names;
             }
-        } catch (SQLException ex) {
+        }
+        catch (SQLException ex) {
             AMLogger.error(ex);
             return new String[0];
         }
@@ -116,7 +126,12 @@ public class SQLManager implements Manager {
             newIPs += tempIp + " ";
         }
         newIPs = newIPs.trim().replace(" ", "$");
-        mysql.query("REPLACE INTO amnames (name,ips) VALUES ('" + name + "','" + newIPs + "');");
+        try {
+            mysql.prepare("REPLACE INTO amnames (name,ips) VALUES ('" + name + "','" + newIPs + "');").executeUpdate();
+        }
+        catch (SQLException ex) {
+            AMLogger.error(ex);
+        }
     }
 
     @Override
@@ -136,6 +151,11 @@ public class SQLManager implements Manager {
             newNames += tempName + " ";
         }
         newNames = newNames.trim().replace(" ", "$");
-        mysql.query("REPLACE INTO amips (ip,names) VALUES ('" + ip + "','" + newNames + "');");
+        try {
+            mysql.prepare("REPLACE INTO amips (ip,names) VALUES ('" + ip + "','" + newNames + "');").executeUpdate();
+        }
+        catch (SQLException ex) {
+            AMLogger.error(ex);
+        }
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerLoginEvent.Result;
 
@@ -45,7 +46,18 @@ public class PlayerListener implements Listener {
         maxAdminIPs = Configuration.getAdminIPLimit();
         maxNames = Configuration.getPlayerNameLimit();
         maxNamesAdmin = Configuration.getAdminNameLimit();
-        whitelist = Configuration.startWhitelist();
+        whitelist = ( Configuration.startWhitelist() && Configuration.overrideVanillaWL() );
+    }
+
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void onASyncPlayerPreLoginEvent(AsyncPlayerPreLoginEvent event) {
+        if (!throddle(event)) {
+            return;
+        }
+
+        if (!checkOnline(event)) {
+            return;
+        }
     }
 
     /**
@@ -57,14 +69,6 @@ public class PlayerListener implements Listener {
     @EventHandler(priority = EventPriority.NORMAL)
     public void onPlayerJoin(PlayerLoginEvent event) {
         if (event.getResult() != Result.ALLOWED) {
-            return;
-        }
-
-        if (!throddle(event)) {
-            return;
-        }
-
-        if (!checkOnline(event)) {
             return;
         }
 
@@ -104,12 +108,12 @@ public class PlayerListener implements Listener {
      * @param permission The permission to check
      * @return True if the player has permission, false otherwise
      */
-    public boolean checkPerm(Player player, String permission) {
+    private boolean checkPerm(Player player, String permission) {
         return player.hasPermission(permission);
     }
 
-    private boolean checkOnline(PlayerLoginEvent event) {
-        String name = event.getPlayer().getName();
+    private boolean checkOnline(AsyncPlayerPreLoginEvent event) {
+        String name = event.getName();
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.getName().equalsIgnoreCase(name)) {
                 return false;
@@ -156,9 +160,9 @@ public class PlayerListener implements Listener {
         return true;
     }
 
-    private boolean throddle(PlayerLoginEvent event) {
+    private boolean throddle(AsyncPlayerPreLoginEvent event) {
         if (!allowConnection) {
-            event.disallow(PlayerLoginEvent.Result.KICK_OTHER, "Please wait to login");
+            event.disallow(AsyncPlayerPreLoginEvent.Result.KICK_OTHER, "Please wait to login");
             return false;
         }
         if (threadID != 0) {
@@ -178,7 +182,7 @@ public class PlayerListener implements Listener {
     }
 
     private boolean whitelist(PlayerLoginEvent event) {
-        if (!whitelist) {
+        if (!getWhitelistStatus()) {
             return true;
         }
         Player player = event.getPlayer();

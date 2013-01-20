@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Reload extends AMCommand {
+public class Reload implements AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {

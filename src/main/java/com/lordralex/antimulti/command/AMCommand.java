@@ -12,8 +12,8 @@ import org.bukkit.command.CommandSender;
  *
  * @author Joshua
  */
-public abstract class AMCommand implements CommandExecutor{
-    
+public interface AMCommand extends CommandExecutor {
+
     @Override
     public abstract boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args);
 
@@ -30,5 +30,4 @@ public abstract class AMCommand implements CommandExecutor{
      * @return Help for this command
      */
     public abstract String getHelp();
-    
 }
