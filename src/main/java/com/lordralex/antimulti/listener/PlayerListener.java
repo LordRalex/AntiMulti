@@ -19,7 +19,7 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class PlayerListener implements Listener {
+public final class PlayerListener implements Listener {
 
     private AntiMulti plugin;
     private int connectionRate = 10;

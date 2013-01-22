@@ -13,7 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class AntiMulti extends JavaPlugin {
+public final class AntiMulti extends JavaPlugin {
 
     private PlayerListener pListener;
     private DataManager manager;
@@ -75,7 +75,7 @@ public class AntiMulti extends JavaPlugin {
      * @return Version
      */
     public String getVersion() {
-        return instance.getDescription().getVersion();
+        return getDescription().getVersion();
     }
 
     /**

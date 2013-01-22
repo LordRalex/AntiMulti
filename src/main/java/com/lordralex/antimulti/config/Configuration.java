@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Configuration {
+public final class Configuration {
 
     private static Plugin plugin;
     private static int playerIPLimit = 2;

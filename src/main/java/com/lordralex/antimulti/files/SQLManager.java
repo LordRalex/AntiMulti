@@ -15,10 +15,10 @@ import java.util.Arrays;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class SQLManager implements Manager {
+public final class SQLManager implements Manager {
 
-    MySQL mysql;
-    Connection conn;
+    private MySQL mysql;
+    private Connection conn;
 
     @Override
     public Manager setup(AntiMulti plugin) {

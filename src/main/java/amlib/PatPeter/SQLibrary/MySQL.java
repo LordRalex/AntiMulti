@@ -7,10 +7,15 @@
  */
 package amlib.PatPeter.SQLibrary;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
-public class MySQL extends Database {
+public final class MySQL extends Database {
 
     private String hostname = "localhost";
     private String portnmbr = "3306";

@@ -11,7 +11,7 @@ import org.bukkit.plugin.Plugin;
  * @version 3.0
  * @author Lord_Ralex
  */
-public class AMLogger {
+public final class AMLogger {
 
     private static Logger logger;
 

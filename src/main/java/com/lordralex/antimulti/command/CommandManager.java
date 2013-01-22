@@ -12,7 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class CommandManager {
+public final class CommandManager {
 
     protected JavaPlugin plugin;
     protected List<AMCommand> commands = new ArrayList<AMCommand>();
@@ -50,18 +50,5 @@ public class CommandManager {
      */
     public List<AMCommand> getCommands() {
         return commands;
-    }
-
-    /**
-     * Disables all the commands registered and removes their executors. This
-     * should be used only when the server is stopped
-     */
-    public void stop() {
-        for (AMCommand exec : commands) {
-            for (String name : exec.getName().split(",")) {
-                plugin.getCommand(name).setExecutor(null);
-            }
-        }
-        commands.clear();
     }
 }

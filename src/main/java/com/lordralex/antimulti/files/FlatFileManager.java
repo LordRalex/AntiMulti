@@ -18,13 +18,12 @@ public class FlatFileManager implements Manager {
 
     File ipFolder, nameFolder;
 
-    public FlatFileManager() {
-    }
-
     @Override
     public Manager setup(AntiMulti plugin) {
         ipFolder = new File(plugin.getUserFolder(), "ips");
         nameFolder = new File(plugin.getUserFolder(), "names");
+        ipFolder.mkdirs();
+        nameFolder.mkdirs();
         return this;
     }
 

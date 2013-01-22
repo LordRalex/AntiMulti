@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
  * @version 3.0.0
  * @author Lord_Ralex
  */
-public class Whitelist implements AMCommand {
+public final class Whitelist implements AMCommand {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String alias, String[] args) {
