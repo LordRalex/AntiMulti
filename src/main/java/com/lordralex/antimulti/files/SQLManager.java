@@ -33,8 +33,7 @@ public class SQLManager implements Manager {
                 PreparedStatement pre2 = mysql.prepare("CREATE TABLE IF NOT EXISTS amnames (name VARCHAR(16), ips VARCHAR(160), PRIMARY KEY (name));");
                 pre2.executeUpdate();
                 return this;
-            }
-            catch (SQLException e) {
+            } catch (SQLException e) {
                 AMLogger.error(e, "Unable to query database, changing to flat files");
             }
         }
@@ -49,8 +48,7 @@ public class SQLManager implements Manager {
         try {
             conn.close();
             mysql.close();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             AMLogger.error(ex);
         }
     }
@@ -58,7 +56,9 @@ public class SQLManager implements Manager {
     @Override
     public String[] getIPs(String name) {
         try {
-            ResultSet result = mysql.prepare("SELECT ips FROM amnames WHERE name=' " + name + "';").executeQuery();
+            PreparedStatement pre = mysql.prepare("SELECT ips FROM amnames WHERE name= ?");
+            pre.setString(1, name);
+            ResultSet result = pre.executeQuery();
             if (result == null) {
                 return null;
             }
@@ -75,8 +75,7 @@ public class SQLManager implements Manager {
                 String[] ips = ip.split("$");
                 return ips;
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             AMLogger.error(ex);
             return new String[0];
         }
@@ -85,7 +84,9 @@ public class SQLManager implements Manager {
     @Override
     public String[] getNames(String ip) {
         try {
-            ResultSet result = mysql.prepare("SELECT names FROM amips WHERE ip=' " + ip + "';").executeQuery();
+            PreparedStatement pre = mysql.prepare("SELECT names FROM amips WHERE ip= ?");
+            pre.setString(1, ip);
+            ResultSet result = pre.executeQuery();
             if (result == null) {
                 return null;
             }
@@ -102,8 +103,7 @@ public class SQLManager implements Manager {
                 String[] names = name.split("$");
                 return names;
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             AMLogger.error(ex);
             return new String[0];
         }
@@ -127,9 +127,11 @@ public class SQLManager implements Manager {
         }
         newIPs = newIPs.trim().replace(" ", "$");
         try {
-            mysql.prepare("REPLACE INTO amnames (name,ips) VALUES ('" + name + "','" + newIPs + "');").executeUpdate();
-        }
-        catch (SQLException ex) {
+            PreparedStatement pre = mysql.prepare("REPLACE INTO amnames (name,ips) VALUES (? , ?)");
+            pre.setString(1, name);
+            pre.setString(2, newIPs);
+            pre.executeUpdate();
+        } catch (SQLException ex) {
             AMLogger.error(ex);
         }
     }
@@ -152,9 +154,11 @@ public class SQLManager implements Manager {
         }
         newNames = newNames.trim().replace(" ", "$");
         try {
-            mysql.prepare("REPLACE INTO amips (ip,names) VALUES ('" + ip + "','" + newNames + "');").executeUpdate();
-        }
-        catch (SQLException ex) {
+            PreparedStatement pre = mysql.prepare("REPLACE INTO amips (ip,names) VALUES (? , ?)");
+            pre.setString(1, ip);
+            pre.setString(1, newNames);
+            pre.executeUpdate();
+        } catch (SQLException ex) {
             AMLogger.error(ex);
         }
     }
