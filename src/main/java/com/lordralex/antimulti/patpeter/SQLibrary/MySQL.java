@@ -5,7 +5,7 @@
  *
  * @author PatPeter
  */
-package amlib.PatPeter.SQLibrary;
+package com.lordralex.antimulti.patpeter.SQLibrary;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

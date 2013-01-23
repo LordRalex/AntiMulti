@@ -1,9 +1,9 @@
 package com.lordralex.antimulti.files;
 
-import amlib.PatPeter.SQLibrary.MySQL;
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
+import com.lordralex.antimulti.patpeter.SQLibrary.MySQL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
