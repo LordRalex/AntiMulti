@@ -24,7 +24,7 @@ public final class MySQL extends Database {
     private String database = "minecraft";
 
     public MySQL(Logger log, String prefix, String hostname, String portnmbr, String database, String username, String password) {
-        super(log, prefix, "[AM-MySQL] ");
+        super(log, "[MySQL] ");
         this.hostname = hostname;
         this.portnmbr = portnmbr;
         this.database = database;

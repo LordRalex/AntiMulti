@@ -15,7 +15,6 @@ import java.util.logging.Logger;
 public abstract class Database {
 
     protected final Logger log;
-    protected final String PREFIX;
     protected final String DATABASE_PREFIX;
     protected boolean connected;
     protected Connection connection;
@@ -29,9 +28,8 @@ public abstract class Database {
     /*
      * MySQL, SQLite
      */
-    public Database(Logger log, String prefix, String dp) {
+    public Database(Logger log, String dp) {
         this.log = log;
-        this.PREFIX = prefix;
         this.DATABASE_PREFIX = dp;
         this.connected = false;
         this.connection = null;
@@ -47,7 +45,7 @@ public abstract class Database {
      */
     protected void writeInfo(String toWrite) {
         if (toWrite != null) {
-            this.log.info(this.PREFIX + this.DATABASE_PREFIX + toWrite);
+            this.log.info(this.DATABASE_PREFIX + toWrite);
         }
     }
 
@@ -64,9 +62,9 @@ public abstract class Database {
     protected void writeError(String toWrite, boolean severe) {
         if (toWrite != null) {
             if (severe) {
-                this.log.severe(this.PREFIX + this.DATABASE_PREFIX + toWrite);
+                this.log.severe(this.DATABASE_PREFIX + toWrite);
             } else {
-                this.log.warning(this.PREFIX + this.DATABASE_PREFIX + toWrite);
+                this.log.warning(this.DATABASE_PREFIX + toWrite);
             }
         }
     }
