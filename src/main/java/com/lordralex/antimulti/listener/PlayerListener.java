@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.listener;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.utils.IPHandler;
 import java.util.Arrays;
@@ -21,15 +20,18 @@ import org.bukkit.event.player.PlayerLoginEvent.Result;
  */
 public final class PlayerListener implements Listener {
 
-    private AntiMulti plugin;
-    private int connectionRate = 10;
-    private int maxIPs = 2;
-    private int maxAdminIPs = 1;
-    private int threadID;
-    private int maxNames = 1;
-    private int maxNamesAdmin = 1;
-    private boolean allowConnection = true;
+    private final AntiMulti plugin;
+    private final int connectionRate;
+    private final int maxIPs;
+    private final int maxAdminIPs;
+    private final int maxNames;
+    private final int maxNamesAdmin;
+    private final String whitelistMessage;
+    private final String maxIPMessage;
+    private final String maxNameMessage;
     private boolean whitelist;
+    private boolean allowConnection;
+    private int threadID;
 
     /**
      * Creates the listener and sets up the local variables for use.
@@ -38,15 +40,19 @@ public final class PlayerListener implements Listener {
      */
     public PlayerListener(AntiMulti aPlugin) {
         plugin = aPlugin;
-        connectionRate = Configuration.getLoginThroddle();
+        int temp = plugin.getConfiguration().getInt("throddle", 20);
+        connectionRate = temp < 0 ? 0 : temp;
         if (connectionRate < 0) {
             AMLogger.warning("Your config's connection rate is below 0, will set it to 0");
         }
-        maxIPs = Configuration.getPlayerIPLimit();
-        maxAdminIPs = Configuration.getAdminIPLimit();
-        maxNames = Configuration.getPlayerNameLimit();
-        maxNamesAdmin = Configuration.getAdminNameLimit();
-        whitelist = ( Configuration.startWhitelist() && Configuration.overrideVanillaWL() );
+        maxIPs = plugin.getConfiguration().getInt("");
+        maxAdminIPs = plugin.getConfiguration().getInt("");
+        maxNames = plugin.getConfiguration().getInt("");
+        maxNamesAdmin = plugin.getConfiguration().getInt("");
+        whitelist = (plugin.getConfiguration().getBoolean("") && plugin.getConfiguration().getBoolean(""));
+        whitelistMessage = plugin.getConfiguration().getString("");
+        maxIPMessage = plugin.getConfiguration().getString("");
+        maxNameMessage = plugin.getConfiguration().getString("");
     }
 
     @EventHandler(priority = EventPriority.NORMAL)
@@ -74,7 +80,7 @@ public final class PlayerListener implements Listener {
 
         if (!whitelist(event)) {
             event.setResult(Result.KICK_WHITELIST);
-            event.setKickMessage(Configuration.getWhitelistMessage());
+            event.setKickMessage(whitelistMessage);
             return;
         }
 
@@ -136,7 +142,7 @@ public final class PlayerListener implements Listener {
             //player is not an admin but has not reach enough names
         } else {
             //player has used too many names, so kick them
-            event.disallow(Result.KICK_OTHER, Configuration.getMaxNameMessage());
+            event.disallow(Result.KICK_OTHER, maxNameMessage);
             return false;
         }
         plugin.getManager().addName(ip, name);
@@ -153,7 +159,7 @@ public final class PlayerListener implements Listener {
         } else if (ips.size() < maxAdminIPs && checkPerm(event.getPlayer(), "antimulti.admin")) {
         } else if (ips.size() < maxIPs) {
         } else {
-            event.disallow(Result.KICK_OTHER, Configuration.getMaxIPMessage());
+            event.disallow(Result.KICK_OTHER, maxIPMessage);
             return false;
         }
         plugin.getManager().addIP(name, ip);

@@ -2,7 +2,6 @@ package com.lordralex.antimulti.command.commands;
 
 import com.lordralex.antimulti.AntiMulti;
 import com.lordralex.antimulti.command.AMCommand;
-import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,7 +34,7 @@ public final class Whitelist implements AMCommand {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (!player.equals(sender)) {
                     if (!player.hasPermission("antimulti.whitelist")) {
-                        player.kickPlayer(Configuration.getWhitelistMessage());
+                        player.kickPlayer(AntiMulti.getPlugin().getConfiguration().getString("messages.whitelist"));
                     }
                 }
             }

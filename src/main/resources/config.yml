@@ -50,6 +50,8 @@ messages:
     name: 'Too many names used'
 startup:
   whitelist: false
+whitelist:
+  override-vanilla: true
 version: ${project.version}
 mysql:
   enable: false
@@ -58,3 +60,6 @@ mysql:
   user: root
   pass: password
   db: database
+  tables:
+    ip: amips
+    name: amnames

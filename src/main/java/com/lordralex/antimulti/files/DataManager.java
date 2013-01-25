@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import org.bukkit.entity.Player;
 
@@ -14,7 +13,7 @@ public final class DataManager implements Manager {
     private Manager manager;
 
     public DataManager(AntiMulti plugin) {
-        if (Configuration.useSQL()) {
+        if (plugin.getConfiguration().getBoolean("mysql.enable", false)) {
             AMLogger.info("The config says to use mySQL, so starting up mySQL systems");
             manager = new SQLManager();
         } else {

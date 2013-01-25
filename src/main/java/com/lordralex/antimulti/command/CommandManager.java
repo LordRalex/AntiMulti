@@ -1,12 +1,9 @@
 package com.lordralex.antimulti.command;
 
-import com.lordralex.antimulti.command.commands.Add;
-import com.lordralex.antimulti.command.commands.Reload;
-import com.lordralex.antimulti.command.commands.Whitelist;
-import com.lordralex.antimulti.config.Configuration;
+import com.lordralex.antimulti.AntiMulti;
+import com.lordralex.antimulti.command.commands.*;
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @version 3.0.0
@@ -14,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public final class CommandManager {
 
-    protected JavaPlugin plugin;
+    protected AntiMulti plugin;
     protected List<AMCommand> commands = new ArrayList<AMCommand>();
 
     /**
@@ -24,10 +21,10 @@ public final class CommandManager {
      *
      * @param aPlugin The Plugin instance
      */
-    public CommandManager(JavaPlugin aPlugin) {
+    public CommandManager(AntiMulti aPlugin) {
         plugin = aPlugin;
 
-        if (Configuration.overrideVanillaWL()) {
+        if (plugin.getConfiguration().getBoolean("whitelist.override-vanilla", true)) {
             Whitelist whitelist = new Whitelist();
             plugin.getCommand(whitelist.getName()).setExecutor(whitelist);
             commands.add(whitelist);
@@ -36,10 +33,6 @@ public final class CommandManager {
         Add add = new Add();
         plugin.getCommand(add.getName()).setExecutor(add);
         commands.add(add);
-
-        Reload reload = new Reload();
-        plugin.getCommand(reload.getName()).setExecutor(reload);
-        commands.add(reload);
     }
 
     /**

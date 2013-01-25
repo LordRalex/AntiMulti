@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.config.Configuration;
 import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.patpeter.SQLibrary.MySQL;
 import java.sql.Connection;
@@ -19,18 +18,30 @@ public final class SQLManager implements Manager {
 
     private MySQL mysql;
     private Connection conn;
+    private String ipTable;
+    private String nameTable;
 
     @Override
     public Manager setup(AntiMulti plugin) {
-        String[] info = Configuration.getSQLInfo();
+        String[] info = new String[]{
+            plugin.getConfiguration().getString("mysql.host", "localhost"),
+            plugin.getConfiguration().getString("mysql.port", "3666"),
+            plugin.getConfiguration().getString("mysql.db", "antimulti"),
+            plugin.getConfiguration().getString("mysql.user", "user"),
+            plugin.getConfiguration().getString("mysql.pass", "")
+        };
         mysql = new MySQL(plugin.getLogger(), "[AM]", info[0], info[1], info[4], info[2], info[3]);
         conn = mysql.getConnection();
         mysql.open();
         if (mysql.checkConnection()) {
             try {
-                PreparedStatement pre1 = mysql.prepare("CREATE TABLE IF NOT EXISTS amips (ip VARCHAR(16), names VARCHAR(160), PRIMARY KEY (ip));");
+                ipTable = plugin.getConfiguration().getString("mysql.table.ip", "amips");
+                nameTable = plugin.getConfiguration().getString("mysql.table.name", "amnames");
+                PreparedStatement pre1 = mysql.prepare("CREATE TABLE IF NOT EXISTS ? (ip VARCHAR(16), names VARCHAR(160), PRIMARY KEY (ip));");
+                pre1.setString(1, ipTable);
                 pre1.executeUpdate();
-                PreparedStatement pre2 = mysql.prepare("CREATE TABLE IF NOT EXISTS amnames (name VARCHAR(16), ips VARCHAR(160), PRIMARY KEY (name));");
+                PreparedStatement pre2 = mysql.prepare("CREATE TABLE IF NOT EXISTS ? (name VARCHAR(16), ips VARCHAR(160), PRIMARY KEY (name));");
+                pre2.setString(1, nameTable);
                 pre2.executeUpdate();
                 return this;
             } catch (SQLException e) {
@@ -47,17 +58,18 @@ public final class SQLManager implements Manager {
     public void close() {
         try {
             conn.close();
-            mysql.close();
         } catch (SQLException ex) {
             AMLogger.error(ex);
         }
+        mysql.close();
     }
 
     @Override
     public String[] getIPs(String name) {
         try {
-            PreparedStatement pre = mysql.prepare("SELECT ips FROM amnames WHERE name= ?");
-            pre.setString(1, name);
+            PreparedStatement pre = mysql.prepare("SELECT ips FROM ? WHERE name= ?");
+            pre.setString(1, nameTable);
+            pre.setString(2, name);
             ResultSet result = pre.executeQuery();
             if (result == null) {
                 return null;
@@ -84,8 +96,9 @@ public final class SQLManager implements Manager {
     @Override
     public String[] getNames(String ip) {
         try {
-            PreparedStatement pre = mysql.prepare("SELECT names FROM amips WHERE ip= ?");
-            pre.setString(1, ip);
+            PreparedStatement pre = mysql.prepare("SELECT names FROM ? WHERE ip= ?");
+            pre.setString(1, ipTable);
+            pre.setString(2, ip);
             ResultSet result = pre.executeQuery();
             if (result == null) {
                 return null;
@@ -127,9 +140,10 @@ public final class SQLManager implements Manager {
         }
         newIPs = newIPs.trim().replace(" ", "$");
         try {
-            PreparedStatement pre = mysql.prepare("REPLACE INTO amnames (name,ips) VALUES (? , ?)");
-            pre.setString(1, name);
-            pre.setString(2, newIPs);
+            PreparedStatement pre = mysql.prepare("REPLACE INTO ? (name,ips) VALUES (? , ?)");
+            pre.setString(1, nameTable);
+            pre.setString(2, name);
+            pre.setString(3, newIPs);
             pre.executeUpdate();
         } catch (SQLException ex) {
             AMLogger.error(ex);
@@ -154,9 +168,10 @@ public final class SQLManager implements Manager {
         }
         newNames = newNames.trim().replace(" ", "$");
         try {
-            PreparedStatement pre = mysql.prepare("REPLACE INTO amips (ip,names) VALUES (? , ?)");
-            pre.setString(1, ip);
-            pre.setString(1, newNames);
+            PreparedStatement pre = mysql.prepare("REPLACE INTO ? (ip,names) VALUES (? , ?)");
+            pre.setString(1, ipTable);
+            pre.setString(2, ip);
+            pre.setString(3, newNames);
             pre.executeUpdate();
         } catch (SQLException ex) {
             AMLogger.error(ex);
