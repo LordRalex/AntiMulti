@@ -6,6 +6,10 @@
     <version>Pre-2.0.8</version>
     <name>AntiMulti</name>
     <url>http://dev.bukkit.org/server-mods/antimulti/</url>
+    <ciManagement>
+        <system>hudson</system>
+        <url>http://do.lordralex.us:8080/job/AntiMulti/</url>
+    </ciManagement>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
