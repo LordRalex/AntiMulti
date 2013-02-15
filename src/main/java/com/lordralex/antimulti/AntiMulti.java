@@ -50,7 +50,6 @@ public final class AntiMulti extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        AMLogger.info(getTitle() + " is now disabling");
         try {
             Bukkit.getScheduler().cancelTasks(this);
         } catch (Exception e) {
