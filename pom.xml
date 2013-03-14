@@ -6,10 +6,13 @@
     <version>Pre-2.0.8</version>
     <name>AntiMulti</name>
     <url>http://dev.bukkit.org/server-mods/antimulti/</url>
-    <ciManagement>
-        <system>hudson</system>
-        <url>http://do.lordralex.us:8080/job/AntiMulti/</url>
-    </ciManagement>
+    <licenses>
+        <license>
+            <name>General Public License, Version 3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <repositories>
         <repository>
             <id>bukkit-repo</id>
