@@ -5,22 +5,11 @@ import com.lordralex.antimulti.command.commands.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @version 3.0.0
- * @author Lord_Ralex
- */
 public final class CommandManager {
 
-    protected AntiMulti plugin;
-    protected List<AMCommand> commands = new ArrayList<AMCommand>();
+    private AntiMulti plugin;
+    private List<AMCommand> commands = new ArrayList<AMCommand>();
 
-    /**
-     * Sets up the CommandManager. This includes creating the CommandManager
-     * instances for each command, define those commands with Bukkit, and return
-     * the list.
-     *
-     * @param aPlugin The Plugin instance
-     */
     public CommandManager(AntiMulti aPlugin) {
         plugin = aPlugin;
 
@@ -35,12 +24,6 @@ public final class CommandManager {
         commands.add(add);
     }
 
-    /**
-     * Returns a list of commands and their {@link AMCommand}s that are
-     * registered with this manager.
-     *
-     * @return List containing all the {@link AMCommand} commands registered
-     */
     public List<AMCommand> getCommands() {
         return commands;
     }

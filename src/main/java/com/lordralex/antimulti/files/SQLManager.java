@@ -1,7 +1,6 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.logger.AMLogger;
 import com.lordralex.antimulti.patpeter.SQLibrary.MySQL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,20 +8,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
 
-/**
- * @version 3.0.0
- * @author Lord_Ralex
- */
 public final class SQLManager implements Manager {
 
     private MySQL mysql;
     private Connection conn;
     private String ipTable;
     private String nameTable;
+    private final AntiMulti plugin;
+
+    public SQLManager(AntiMulti p) {
+        plugin = p;
+    }
 
     @Override
-    public Manager setup(AntiMulti plugin) {
+    public Manager setup() {
         String[] info = new String[]{
             plugin.getConfiguration().getString("mysql.host", "localhost"),
             plugin.getConfiguration().getString("mysql.port", "3666"),
@@ -45,12 +46,12 @@ public final class SQLManager implements Manager {
                 pre2.executeUpdate();
                 return this;
             } catch (SQLException e) {
-                AMLogger.error(e, "Unable to query database, changing to flat files");
+                plugin.getLogger().log(Level.SEVERE, "Unable to query database, changing to flat files", e);
             }
         }
-        AMLogger.severe("Unable to connect to mySQL database, using flatfile system");
-        Manager manager = new FlatFileManager();
-        manager.setup(plugin);
+        plugin.getLogger().severe("Unable to connect to mySQL database, using flatfile system");
+        Manager manager = new FlatFileManager(plugin);
+        manager.setup();
         return manager;
     }
 
@@ -59,7 +60,7 @@ public final class SQLManager implements Manager {
         try {
             conn.close();
         } catch (SQLException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An error occured on closing SQL connection", ex);
         }
         mysql.close();
     }
@@ -88,7 +89,7 @@ public final class SQLManager implements Manager {
                 return ips;
             }
         } catch (SQLException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An SQL error occurred", ex);
             return new String[0];
         }
     }
@@ -117,7 +118,7 @@ public final class SQLManager implements Manager {
                 return names;
             }
         } catch (SQLException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An SQL error occurred", ex);
             return new String[0];
         }
     }
@@ -146,7 +147,7 @@ public final class SQLManager implements Manager {
             pre.setString(3, newIPs);
             pre.executeUpdate();
         } catch (SQLException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An SQL error occurred", ex);
         }
     }
 
@@ -174,7 +175,7 @@ public final class SQLManager implements Manager {
             pre.setString(3, newNames);
             pre.executeUpdate();
         } catch (SQLException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An SQL error occurred", ex);
         }
     }
 }

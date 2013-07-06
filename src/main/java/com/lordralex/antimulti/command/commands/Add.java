@@ -8,10 +8,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-/**
- * @version 3.0.0
- * @author Lord_Ralex
- */
 public final class Add implements AMCommand {
 
     @Override
@@ -23,20 +19,6 @@ public final class Add implements AMCommand {
         }
         try {
             InetAddress.getByName(args[1]);
-            String[] testIP = args[1].split(".");
-            if (testIP.length != 4) {
-                throw new UnknownHostException();
-            }
-            for (String test : testIP) {
-                try {
-                    int num = Integer.parseInt(test);
-                    if (num < 0 || num > 255) {
-                        throw new NumberFormatException();
-                    }
-                } catch (NumberFormatException e) {
-                    throw new UnknownHostException();
-                }
-            }
         } catch (UnknownHostException ex) {
             sender.sendMessage(ChatColor.RED + args[1] + " is not a valid IP");
             return true;

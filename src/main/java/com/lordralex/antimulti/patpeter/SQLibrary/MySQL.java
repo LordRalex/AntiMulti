@@ -48,11 +48,11 @@ public final class MySQL extends Database {
         if (initialize()) {
             String url = "";
             try {
-                url = "jdbc:mysql://" + this.hostname + ":" + this.portnmbr + "/" + this.database;
-                this.connection = DriverManager.getConnection(url, this.username, this.password);
+                url = "jdbc:mysql://" + hostname + ":" + portnmbr + "/" + database;
+                connection = DriverManager.getConnection(url, username, password);
             } catch (SQLException e) {
-                this.writeError(url, true);
-                this.writeError("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".", true);
+                writeError(url, true);
+                writeError("Could not be resolved because of an SQL Exception: " + e.getMessage() + ".", true);
             }
         }
         return null;
@@ -84,10 +84,10 @@ public final class MySQL extends Database {
 
     @Override
     public ResultSet query(String query) {
-        Statement statement = null;
+        Statement statement;
         ResultSet result = null;
         try {
-            statement = this.connection.createStatement();
+            statement = connection.createStatement();
             result = statement.executeQuery("SELECT CURTIME()");
 
             switch (this.getStatement(query)) {
@@ -100,7 +100,7 @@ public final class MySQL extends Database {
             }
             return result;
         } catch (SQLException e) {
-            this.writeError("Error in SQL query: " + e.getMessage(), false);
+            writeError("Error in SQL query: " + e.getMessage(), false);
         }
         return result;
     }
@@ -113,7 +113,7 @@ public final class MySQL extends Database {
             return ps;
         } catch (SQLException e) {
             if (!e.toString().contains("not return ResultSet")) {
-                this.writeError("Error in SQL prepare() query: " + e.getMessage(), false);
+                writeError("Error in SQL prepare() query: " + e.getMessage(), false);
             }
         }
         return ps;
@@ -121,10 +121,10 @@ public final class MySQL extends Database {
 
     @Override
     public boolean createTable(String query) {
-        Statement statement = null;
+        Statement statement;
         try {
-            if (query.equals("") || query == null) {
-                this.writeError("SQL query empty: createTable(" + query + ")", true);
+            if (query == null || query.isEmpty()) {
+                writeError("SQL query empty: createTable(" + query + ")", true);
                 return false;
             }
 
@@ -132,7 +132,7 @@ public final class MySQL extends Database {
             statement.execute(query);
             return true;
         } catch (Exception e) {
-            this.writeError(e.getMessage(), true);
+            writeError(e.getMessage(), true);
             return false;
         }
     }
@@ -141,24 +141,18 @@ public final class MySQL extends Database {
     public boolean checkTable(String table) {
         try {
             Statement statement = connection.createStatement();
-
             ResultSet result = statement.executeQuery("SELECT * FROM " + table);
-
             if (result == null) {
                 return false;
             }
-            if (result != null) {
-                return true;
-            }
+            return true;
         } catch (SQLException e) {
             if (e.getMessage().contains("exist")) {
                 return false;
             } else {
-                this.writeError("Error in SQL query: " + e.getMessage(), false);
+                writeError("Error in SQL query: " + e.getMessage(), false);
             }
         }
-
-
         if (query("SELECT * FROM " + table) == null) {
             return true;
         }
@@ -167,17 +161,16 @@ public final class MySQL extends Database {
 
     @Override
     public boolean wipeTable(String table) {
-        Statement statement = null;
-        String query = null;
+        Statement statement;
+        String query;
         try {
-            if (!this.checkTable(table)) {
-                this.writeError("Error wiping table: \"" + table + "\" does not exist.", true);
+            if (!checkTable(table)) {
+                writeError("Error wiping table: \"" + table + "\" does not exist.", true);
                 return false;
             }
-            statement = this.connection.createStatement();
+            statement = connection.createStatement();
             query = "DELETE FROM " + table + ";";
             statement.executeUpdate(query);
-
             return true;
         } catch (SQLException e) {
             if (!e.toString().contains("not return ResultSet")) {

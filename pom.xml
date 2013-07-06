@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.lordralex.antimulti</groupId>
     <artifactId>AntiMulti</artifactId>
-    <version>Pre-2.0.8</version>
+    <version>2.1.0</version>
     <name>AntiMulti</name>
     <url>http://dev.bukkit.org/server-mods/antimulti/</url>
     <licenses>
@@ -38,9 +38,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <showDeprecation>true</showDeprecation>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -49,7 +48,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.7-R1.0</version>
+            <version>1.5.2-R1.0</version>
             <type>jar</type>
         </dependency>
     </dependencies>

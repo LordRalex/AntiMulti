@@ -1,27 +1,28 @@
 package com.lordralex.antimulti.files;
 
 import com.lordralex.antimulti.AntiMulti;
-import com.lordralex.antimulti.logger.AMLogger;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-/**
- * @version 3.0.0
- * @author Lord_Ralex
- */
-public class FlatFileManager implements Manager {
+public final class FlatFileManager implements Manager {
 
-    File ipFolder, nameFolder;
+    private final File ipFolder, nameFolder;
+    private final AntiMulti plugin;
 
-    @Override
-    public Manager setup(AntiMulti plugin) {
+    public FlatFileManager(AntiMulti p) {
+        plugin = p;
         ipFolder = new File(plugin.getUserFolder(), "ips");
         nameFolder = new File(plugin.getUserFolder(), "names");
+    }
+
+    @Override
+    public Manager setup() {
         ipFolder.mkdirs();
         nameFolder.mkdirs();
         return this;
@@ -64,7 +65,7 @@ public class FlatFileManager implements Manager {
         try {
             temp.save(new File(ipFolder, name + ".yml"));
         } catch (IOException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An IO error occurred", ex);
         }
     }
 
@@ -80,7 +81,7 @@ public class FlatFileManager implements Manager {
         try {
             temp.save(new File(nameFolder, ip + ".yml"));
         } catch (IOException ex) {
-            AMLogger.error(ex);
+            plugin.getLogger().log(Level.SEVERE, "An IO error occurred", ex);
         }
     }
 }

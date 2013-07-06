@@ -4,28 +4,15 @@ import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Handles comparison of 2 IPs. This allows checks of IPs including ranges and
- * wildcards.
- *
- * @version 3.0.0
- * @author Lord_Ralex
- */
 public final class IPHandler {
 
-    /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
-     * and ranges (x-y)
-     *
-     * @param ip1 The first IP to check
-     * @param ip2 The second IP to check
-     * @return True if the ips are the same, false otherwise
-     */
     public static boolean contains(String ip1, String ip2) {
         if (ip1.equalsIgnoreCase(ip2)) {
             return true;
+
         }
-        String[] ip1parts = ip1.split(".");
+        /*
+         String[] ip1parts = ip1.split(".");
         if (ip1parts.length != 4) {
             String[] temp = new String[4];
             Arrays.fill(temp, "*");
@@ -66,59 +53,25 @@ public final class IPHandler {
                     return false;
                 }
             }
-        }
-        return true;
+
+         }*/
+        return false;
     }
 
-    /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
-     * and ranges (x-y)
-     *
-     * @param ip The first IP to check
-     * @param ip2 The second IP to check
-     * @return True if the IPs are the same, false otherwise
-     * @see contains(String, String)
-     */
     public static boolean contains(InetAddress ip, InetAddress ip2) {
         return contains(ip.getHostAddress(), ip2.getHostAddress());
     }
 
-    /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
-     * and ranges (x-y)
-     *
-     * @param ip The first IP to check
-     * @param ip2 The second IP to check
-     * @return True if the IPs are the same, false otherwise
-     * @see contains(String, String)
-     */
     public static boolean contains(String ip, InetAddress ip2) {
         return contains(ip, ip2.getHostAddress());
     }
 
-    /**
-     * Checks 2 IPs to see if they match. This also checks for the wildcard (*)
-     * and ranges (x-y)
-     *
-     * @param ip The first IP to check
-     * @param ip2 The second IP to check
-     * @return True if the IPs are the same, false otherwise
-     * @see contains(String, String)
-     */
     public static boolean contains(InetAddress ip, String ip2) {
         return contains(ip.getHostAddress(), ip2);
     }
 
-    /**
-     * Checks a list of IPs to see if one is in it. This also checks for the
-     * wildcard (*) and ranges (x-y)
-     *
-     * @param list The list of IPs to check with
-     * @param ip The ip to attempt to find
-     * @return True if the list contains the IP, false otherwise
-     */
     public static boolean contains(List<String> list, String ip) {
-        for (String test : list) {
+        for (String test: list) {
             if (contains(test, ip)) {
                 return true;
             }
